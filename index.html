@@ -3,19 +3,19 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>nedcodes — Cursor Rules Packs</title>
-  <meta name="description" content="Drop-in .cursorrules files that train Cursor to write production-quality code. React, TypeScript, Python, and Debugging packs.">
+  <title>nedcodes — Cursor Rules, Safety Checklist & Tools</title>
+  <meta name="description" content="Free Cursor rules (.mdc format), safety checklist, and tools. Tested on real projects, not guesswork.">
   <link rel="canonical" href="https://cursorrulespacks.github.io/">
-  <meta property="og:title" content="nedcodes - Cursor Rules Packs">
-  <meta property="og:description" content="Drop-in .cursorrules files that train Cursor to write production-quality code. React, TypeScript, Python, and Debugging packs.">
+  <meta property="og:title" content="nedcodes - Cursor Rules, Safety Checklist & Tools">
+  <meta property="og:description" content="Free Cursor rules (.mdc format), safety checklist, and tools. Tested on real projects.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://cursorrulespacks.github.io/">
   <meta property="og:image" content="https://cursorrulespacks.github.io/og-image.png">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="nedcodes - Cursor Rules Packs">
-  <meta name="twitter:description" content="Drop-in .cursorrules files that train Cursor to write production-quality code.">
+  <meta name="twitter:title" content="nedcodes - Cursor Rules, Safety Checklist & Tools">
+  <meta name="twitter:description" content="Free Cursor rules (.mdc format), safety checklist, and tools. Tested on real projects.">
   <meta name="twitter:image" content="https://cursorrulespacks.github.io/og-image.png">
   <meta name="robots" content="index, follow">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -353,18 +353,18 @@
   <nav>
     <div class="container">
       <div class="logo"><span>ned</span>codes</div>
-      <a href="https://cursorrulespacks.gumroad.com" class="cta">Browse Packs</a>
+      <a href="https://github.com/cursorrulespacks/cursorrules-collection" class="cta">Free Rules on GitHub</a>
     </div>
   </nav>
 
   <section class="hero">
     <div class="container">
-      <div class="hero-badge">.cursorrules</div>
-      <h1>Train Cursor to write<br><span class="accent">production-quality</span> code</h1>
-      <p>Drop-in rules files that instantly improve what Cursor generates. No config, no extensions — just better AI output.</p>
+      <div class="hero-badge">.mdc rules</div>
+      <h1>Make Cursor <span class="accent">actually follow</span> your rules</h1>
+      <p>Free .mdc rules, a safety checklist, and tools for Cursor AI. Tested with real experiments, not guesswork.</p>
       <div class="hero-buttons">
-        <a href="https://cursorrulespacks.gumroad.com/l/cursor-starter" class="btn-primary">Get the Free Starter Pack</a>
-        <a href="https://github.com/cursorrulespacks/cursorrules-collection" class="btn-secondary">33 Free Rules on GitHub</a>
+        <a href="https://github.com/cursorrulespacks/cursorrules-collection" class="btn-primary">33 Free Rules on GitHub</a>
+        <a href="https://cursorrulespacks.gumroad.com/l/cursor-safety-checklist" class="btn-secondary">Free Safety Checklist</a>
         <a href="#products" class="btn-secondary">View All Packs</a>
       </div>
     </div>
@@ -383,7 +383,7 @@
         <div class="step">
           <div class="step-num">2</div>
           <h3>Drop In</h3>
-          <p>Copy the <code>.cursorrules</code> file to your project root. That's the entire setup.</p>
+          <p>Copy the <code>.mdc</code> files to <code>.cursor/rules/</code> in your project. That's the entire setup.</p>
         </div>
         <div class="step">
           <div class="step-num">3</div>
@@ -403,9 +403,14 @@
           <span class="code-dot red"></span>
           <span class="code-dot yellow"></span>
           <span class="code-dot green"></span>
-          <span class="code-filename">.cursorrules</span>
+          <span class="code-filename">.cursor/rules/react.mdc</span>
         </div>
         <div class="code-body">
+          <span class="comment">---</span><br>
+          <span class="highlight">alwaysApply: true</span><br>
+          <span class="highlight">globs: ["*.tsx", "*.jsx"]</span><br>
+          <span class="comment">---</span><br>
+          <br>
           <span class="comment">## React Patterns</span><br>
           <span class="rule">- Use <span class="highlight">Server Components</span> by default</span><br>
           <span class="rule">- Add <span class="highlight">'use client'</span> only when you need interactivity</span><br>
@@ -431,6 +436,21 @@
       <div class="section-title">Packs</div>
       <h2 class="section-heading">Choose your stack</h2>
       <div class="product-grid">
+
+        <a href="https://cursorrulespacks.gumroad.com/l/cursor-safety-checklist" class="product-card featured" style="text-decoration:none;color:inherit;">
+          <div class="product-icon">🛡️</div>
+          <h3>Cursor Safety Checklist</h3>
+          <div class="product-tags">
+            <span class="tag">Agent Mode</span>
+            <span class="tag">.mdc Rules</span>
+            <span class="tag">Git Safety</span>
+          </div>
+          <p class="desc">A one-page pre-flight checklist for AI coding sessions. Covers rules that stick, prompts that destroy comments, new file drift, and git safety. Based on real testing.</p>
+          <div class="product-footer">
+            <span class="price free">FREE</span>
+            <span class="btn-primary" style="padding:10px 24px;font-size:14px;">Download Free →</span>
+          </div>
+        </a>
 
         <a href="https://cursorrulespacks.gumroad.com/l/complete-cursor-rules-bundle" class="product-card featured" style="text-decoration:none;color:inherit;">
           <div class="product-icon">📦</div>
@@ -529,9 +549,9 @@
 
   <section class="cta-section">
     <div class="container">
-      <h2>Stop fixing AI-generated code</h2>
-      <p>Start with the free starter pack. Upgrade when you're ready.</p>
-      <a href="https://cursorrulespacks.gumroad.com/l/cursor-starter" class="btn-primary">Get the Free Starter Pack →</a>
+      <h2>Stop guessing what Cursor will do</h2>
+      <p>Start with the free rules collection or safety checklist. Paid packs if you want more.</p>
+      <a href="https://github.com/cursorrulespacks/cursorrules-collection" class="btn-primary">Get 33 Free Rules →</a>
       <div style="margin-top:48px;padding-top:48px;border-top:1px solid var(--border);">
         <p style="color:var(--text-dim);font-size:16px;margin-bottom:8px;">Questions, feedback, or custom pack requests?</p>
         <a href="mailto:cursorrulespacks@gmail.com" style="font-size:20px;font-weight:600;color:var(--accent);">cursorrulespacks@gmail.com</a>
