@@ -3,19 +3,19 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>nedcodes — Cursor Rules, Safety Checklist & Tools</title>
-  <meta name="description" content="Free Cursor rules (.mdc format), safety checklist, and tools. Tested on real projects, not guesswork.">
+  <title>nedcodes — Cursor AI Setup Audits & Free Rules</title>
+  <meta name="description" content="Get a written audit of your Cursor AI setup. Rules, .mdc files, project structure reviewed by someone who's tested what actually works. $50, 48 hours, fully async.">
   <link rel="canonical" href="https://cursorrulespacks.github.io/">
-  <meta property="og:title" content="nedcodes - Cursor Rules, Safety Checklist & Tools">
-  <meta property="og:description" content="Free Cursor rules (.mdc format), safety checklist, and tools. Tested on real projects.">
+  <meta property="og:title" content="nedcodes — Cursor AI Setup Audits & Free Rules">
+  <meta property="og:description" content="Written audit of your Cursor AI setup. $50, 48 hours, fully async.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://cursorrulespacks.github.io/">
   <meta property="og:image" content="https://cursorrulespacks.github.io/og-image.png">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="nedcodes - Cursor Rules, Safety Checklist & Tools">
-  <meta name="twitter:description" content="Free Cursor rules (.mdc format), safety checklist, and tools. Tested on real projects.">
+  <meta name="twitter:title" content="nedcodes — Cursor AI Setup Audits & Free Rules">
+  <meta name="twitter:description" content="Written audit of your Cursor AI setup. $50, 48 hours, fully async.">
   <meta name="twitter:image" content="https://cursorrulespacks.github.io/og-image.png">
   <meta name="robots" content="index, follow">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -30,14 +30,8 @@
       --text-dim: #8b949e;
       --accent: #48c78e;
       --accent-glow: rgba(72,199,142,0.15);
-      --react: #61dafb;
-      --ts: #3178c6;
-      --python: #f7df1e;
-      --debug: #ff6b6b;
     }
-
     * { margin: 0; padding: 0; box-sizing: border-box; }
-
     body {
       background: var(--bg);
       color: var(--text);
@@ -45,80 +39,32 @@
       line-height: 1.6;
       -webkit-font-smoothing: antialiased;
     }
-
     a { color: var(--accent); text-decoration: none; }
     a:hover { text-decoration: underline; }
+    .container { max-width: 800px; margin: 0 auto; padding: 0 24px; }
 
-    .container {
-      max-width: 1100px;
-      margin: 0 auto;
-      padding: 0 24px;
-    }
-
-    /* Nav */
-    nav {
-      padding: 24px 0;
-      border-bottom: 1px solid var(--border);
-    }
-    nav .container {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    .logo {
-      font-size: 20px;
-      font-weight: 900;
-      color: var(--text);
-      letter-spacing: -0.5px;
-    }
+    nav { padding: 24px 0; border-bottom: 1px solid var(--border); }
+    nav .container { display: flex; justify-content: space-between; align-items: center; max-width: 800px; }
+    .logo { font-size: 20px; font-weight: 900; color: var(--text); letter-spacing: -0.5px; }
     .logo span { color: var(--accent); }
-    nav a.cta {
-      background: var(--accent);
-      color: #0a0a0f;
-      padding: 10px 24px;
-      border-radius: 8px;
-      font-weight: 600;
-      font-size: 14px;
-      transition: opacity 0.2s;
-    }
-    nav a.cta:hover { opacity: 0.9; text-decoration: none; }
+    .nav-links { display: flex; gap: 24px; font-size: 14px; }
+    .nav-links a { color: var(--text-dim); font-weight: 500; }
+    .nav-links a:hover { color: var(--text); text-decoration: none; }
 
-    /* Hero */
-    .hero {
-      padding: 100px 0 80px;
-      text-align: center;
-    }
-    .hero-badge {
-      display: inline-block;
-      background: var(--accent-glow);
-      border: 1px solid rgba(72,199,142,0.25);
-      color: var(--accent);
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 14px;
-      font-weight: 500;
-      padding: 6px 20px;
-      border-radius: 20px;
-      margin-bottom: 32px;
-    }
+    .hero { padding: 80px 0 60px; }
     .hero h1 {
-      font-size: clamp(40px, 6vw, 72px);
+      font-size: clamp(32px, 5vw, 48px);
       font-weight: 900;
-      line-height: 1.1;
-      margin-bottom: 24px;
-      letter-spacing: -1.5px;
+      line-height: 1.15;
+      margin-bottom: 20px;
+      letter-spacing: -1px;
     }
     .hero h1 .accent { color: var(--accent); }
-    .hero p {
-      font-size: 20px;
+    .hero .subtitle {
+      font-size: 18px;
       color: var(--text-dim);
+      margin-bottom: 36px;
       max-width: 600px;
-      margin: 0 auto 48px;
-    }
-    .hero-buttons {
-      display: flex;
-      gap: 16px;
-      justify-content: center;
-      flex-wrap: wrap;
     }
     .btn-primary {
       background: var(--accent);
@@ -127,8 +73,8 @@
       border-radius: 10px;
       font-weight: 700;
       font-size: 16px;
-      transition: opacity 0.2s;
       display: inline-block;
+      transition: opacity 0.2s;
     }
     .btn-primary:hover { opacity: 0.9; text-decoration: none; }
     .btn-secondary {
@@ -139,198 +85,146 @@
       border-radius: 10px;
       font-weight: 600;
       font-size: 16px;
-      transition: border-color 0.2s;
       display: inline-block;
+      transition: border-color 0.2s;
     }
     .btn-secondary:hover { border-color: var(--accent); text-decoration: none; }
+    .hero-buttons { display: flex; gap: 16px; flex-wrap: wrap; }
 
-    /* How it works */
-    .how {
-      padding: 80px 0;
-      border-top: 1px solid var(--border);
-    }
-    .section-title {
-      font-size: 14px;
-      font-weight: 600;
-      color: var(--accent);
-      text-transform: uppercase;
-      letter-spacing: 2px;
-      margin-bottom: 16px;
-      text-align: center;
-    }
-    .section-heading {
-      font-size: 36px;
-      font-weight: 800;
-      text-align: center;
-      margin-bottom: 64px;
-      letter-spacing: -0.5px;
-    }
-    .steps {
+    section { padding: 60px 0; border-top: 1px solid var(--border); }
+    h2 { font-size: 28px; font-weight: 800; margin-bottom: 24px; letter-spacing: -0.5px; }
+
+    .what-you-get ul {
+      list-style: none;
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 32px;
+      gap: 16px;
     }
-    .step {
+    .what-you-get li {
       background: var(--surface);
       border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 40px 32px;
-      text-align: center;
+      border-radius: 12px;
+      padding: 20px 24px;
+      font-size: 16px;
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
     }
-    .step-num {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      width: 48px;
-      height: 48px;
+    .what-you-get li .icon { font-size: 20px; flex-shrink: 0; }
+
+    .pricing-card {
+      background: var(--surface);
+      border: 1px solid rgba(72,199,142,0.2);
+      border-radius: 16px;
+      padding: 40px;
+      max-width: 480px;
+    }
+    .pricing-card .price {
+      font-size: 48px;
+      font-weight: 900;
+      margin-bottom: 8px;
+    }
+    .pricing-card .price span {
+      font-size: 18px;
+      color: var(--text-dim);
+      font-weight: 400;
+    }
+    .pricing-card .details {
+      color: var(--text-dim);
+      font-size: 15px;
+      margin-bottom: 24px;
+    }
+    .pricing-card ul {
+      list-style: none;
+      margin-bottom: 32px;
+    }
+    .pricing-card li {
+      padding: 8px 0;
+      font-size: 15px;
+      color: var(--text-dim);
+    }
+    .pricing-card li::before {
+      content: "✓ ";
+      color: var(--accent);
+      font-weight: 700;
+    }
+
+    .how-steps {
+      counter-reset: step;
+      list-style: none;
+      display: grid;
+      gap: 20px;
+    }
+    .how-steps li {
+      counter-increment: step;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 24px;
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+    }
+    .how-steps li::before {
+      content: counter(step);
       background: var(--accent-glow);
       border: 1px solid rgba(72,199,142,0.25);
       color: var(--accent);
       font-weight: 800;
-      font-size: 20px;
-      border-radius: 12px;
-      margin-bottom: 24px;
-    }
-    .step h3 {
-      font-size: 18px;
-      font-weight: 700;
-      margin-bottom: 12px;
-    }
-    .step p {
-      color: var(--text-dim);
-      font-size: 15px;
+      font-size: 16px;
+      min-width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
     }
 
-    /* Products */
-    .products {
-      padding: 80px 0;
-      border-top: 1px solid var(--border);
-    }
-    .product-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 24px;
-    }
-    .product-card {
+    .free-section {
       background: var(--surface);
       border: 1px solid var(--border);
       border-radius: 16px;
       padding: 40px;
-      transition: border-color 0.2s;
-      display: flex;
-      flex-direction: column;
     }
-    .product-card:hover { border-color: rgba(255,255,255,0.15); }
-    .product-card.featured {
-      grid-column: 1 / -1;
-      background: linear-gradient(135deg, var(--surface), rgba(72,199,142,0.05));
-      border-color: rgba(72,199,142,0.2);
-    }
-    .product-icon {
-      font-size: 32px;
-      margin-bottom: 16px;
-    }
-    .product-card h3 {
+    .free-section h3 {
       font-size: 22px;
       font-weight: 700;
-      margin-bottom: 8px;
+      margin-bottom: 12px;
     }
-    .product-card .desc {
+    .free-section p {
       color: var(--text-dim);
-      font-size: 15px;
-      margin-bottom: 24px;
-      flex: 1;
-    }
-    .product-footer {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    .price {
-      font-size: 24px;
-      font-weight: 800;
-    }
-    .price.free { color: var(--accent); }
-    .product-tags {
-      display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
+      font-size: 16px;
       margin-bottom: 20px;
     }
-    .tag {
-      background: rgba(255,255,255,0.05);
-      border: 1px solid var(--border);
+    .free-section .stats {
       color: var(--text-dim);
-      font-size: 12px;
-      font-weight: 500;
-      padding: 4px 12px;
-      border-radius: 6px;
+      font-size: 14px;
+      margin-top: 16px;
     }
 
-    /* Code preview */
-    .preview {
-      padding: 80px 0;
-      border-top: 1px solid var(--border);
+    .credibility {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
     }
-    .code-window {
+    .cred-item {
       background: var(--surface);
       border: 1px solid var(--border);
-      border-radius: 16px;
-      overflow: hidden;
-      max-width: 800px;
-      margin: 0 auto;
-    }
-    .code-titlebar {
-      padding: 16px 20px;
-      border-bottom: 1px solid var(--border);
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-    .code-dot {
-      width: 12px; height: 12px;
-      border-radius: 50%;
-    }
-    .code-dot.red { background: #ff5f57; }
-    .code-dot.yellow { background: #febc2e; }
-    .code-dot.green { background: #28c840; }
-    .code-filename {
-      margin-left: 12px;
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 13px;
-      color: var(--text-dim);
-    }
-    .code-body {
+      border-radius: 12px;
       padding: 24px;
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 14px;
-      line-height: 1.8;
-      overflow-x: auto;
-    }
-    .code-body .comment { color: #6a737d; }
-    .code-body .rule { color: var(--text); }
-    .code-body .highlight { color: var(--accent); }
-    .code-body .warn { color: #ff79c6; }
-
-    /* CTA */
-    .cta-section {
-      padding: 100px 0;
       text-align: center;
-      border-top: 1px solid var(--border);
     }
-    .cta-section h2 {
-      font-size: 40px;
+    .cred-item .num {
+      font-size: 28px;
       font-weight: 900;
-      margin-bottom: 16px;
-      letter-spacing: -0.5px;
+      color: var(--accent);
+      margin-bottom: 4px;
     }
-    .cta-section p {
+    .cred-item .label {
       color: var(--text-dim);
-      font-size: 18px;
-      margin-bottom: 40px;
+      font-size: 13px;
     }
 
-    /* Footer */
     footer {
       padding: 40px 0;
       border-top: 1px solid var(--border);
@@ -338,232 +232,114 @@
       color: var(--text-dim);
       font-size: 14px;
     }
+    footer a { color: var(--text-dim); }
+    footer a:hover { color: var(--accent); }
 
-    /* Responsive */
-    @media (max-width: 768px) {
-      .steps { grid-template-columns: 1fr; }
-      .product-grid { grid-template-columns: 1fr; }
-      .hero { padding: 60px 0 40px; }
-      .how, .products, .preview, .cta-section { padding: 60px 0; }
+    @media (max-width: 600px) {
+      .hero { padding: 48px 0 36px; }
+      section { padding: 48px 0; }
+      .pricing-card { padding: 28px; }
     }
   </style>
 </head>
 <body>
 
-  <nav>
-    <div class="container">
-      <div class="logo"><span>ned</span>codes</div>
-      <a href="https://github.com/cursorrulespacks/cursorrules-collection" class="cta">Free Rules on GitHub</a>
+<nav>
+  <div class="container">
+    <div class="logo"><span>ned</span>codes</div>
+    <div class="nav-links">
+      <a href="#audit">Audit</a>
+      <a href="#free">Free Rules</a>
+      <a href="https://dev.to/nedcodes">Articles</a>
     </div>
-  </nav>
+  </div>
+</nav>
 
-  <section class="hero">
-    <div class="container">
-      <div class="hero-badge">.mdc rules</div>
-      <h1>Make Cursor <span class="accent">actually follow</span> your rules</h1>
-      <p>Free .mdc rules, a safety checklist, and tools for Cursor AI. Tested with real experiments, not guesswork.</p>
-      <div class="hero-buttons">
-        <a href="https://github.com/cursorrulespacks/cursorrules-collection" class="btn-primary">33 Free Rules on GitHub</a>
-        <a href="https://cursorrulespacks.gumroad.com/l/cursor-safety-checklist" class="btn-secondary">Free Safety Checklist</a>
-        <a href="#products" class="btn-secondary">View All Packs</a>
+<div class="container">
+
+  <section class="hero" style="border:none;padding-top:80px;">
+    <h1>Your Cursor rules probably <span class="accent">aren't working</span></h1>
+    <p class="subtitle">I've tested dozens of .cursorrules and .mdc configurations. Most have problems that silently degrade output. I'll review yours and tell you exactly what to fix.</p>
+    <div class="hero-buttons">
+      <a href="mailto:cursorrulespacks@gmail.com?subject=Cursor%20Setup%20Audit" class="btn-primary">Get an Audit ($50) →</a>
+      <a href="https://github.com/cursorrulespacks/cursorrules-collection" class="btn-secondary">Free Rules (60+)</a>
+    </div>
+  </section>
+
+  <section class="what-you-get" id="audit">
+    <h2>What you get</h2>
+    <ul>
+      <li><span class="icon">📋</span><div><strong>Rules review</strong><br>I check every .cursorrules and .mdc file for common mistakes: missing alwaysApply, conflicting instructions, vague wording that models ignore.</div></li>
+      <li><span class="icon">📁</span><div><strong>Project structure check</strong><br>Are your rules scoped to the right files? Are globs correct? Is anything being loaded that shouldn't be?</div></li>
+      <li><span class="icon">⚙️</span><div><strong>Model and mode recommendations</strong><br>Based on your workflow, which models and modes make sense. Auto vs manual, when to use agent mode, what to avoid.</div></li>
+      <li><span class="icon">📝</span><div><strong>Written report with action items</strong><br>A markdown document with everything prioritized. What to fix first, what to add, what to remove. Specific rewrites included.</div></li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>How it works</h2>
+    <ol class="how-steps">
+      <li><div><strong>Send your files</strong><br>Email your .cursorrules, .mdc files, and a short description of your project to <a href="mailto:cursorrulespacks@gmail.com">cursorrulespacks@gmail.com</a>. Or DM me on <a href="https://dev.to/nedcodes">Dev.to</a>, <a href="https://reddit.com/u/Pleasant-Today60">Reddit</a>, or <a href="https://forum.cursor.com/u/nedcodes">Cursor Forum</a>.</div></li>
+      <li><div><strong>I review everything</strong><br>I go through your setup against tested patterns. What works, what doesn't, what's missing.</div></li>
+      <li><div><strong>Get your report</strong><br>Written report delivered within 48 hours. Prioritized action items you can implement immediately.</div></li>
+    </ol>
+  </section>
+
+  <section>
+    <h2>Pricing</h2>
+    <div class="pricing-card">
+      <div class="price">$50 <span>one-time</span></div>
+      <p class="details">Fully async. No calls needed.</p>
+      <ul>
+        <li>Review of all rules files (.cursorrules + .mdc)</li>
+        <li>Project structure and scoping check</li>
+        <li>Model/mode recommendations</li>
+        <li>Written report with specific rewrites</li>
+        <li>48-hour turnaround</li>
+        <li>One round of follow-up questions included</li>
+      </ul>
+      <a href="mailto:cursorrulespacks@gmail.com?subject=Cursor%20Setup%20Audit" class="btn-primary">Email to get started →</a>
+    </div>
+  </section>
+
+  <section>
+    <h2>Why trust this</h2>
+    <div class="credibility">
+      <div class="cred-item">
+        <div class="num">60+</div>
+        <div class="label">free rules published</div>
+      </div>
+      <div class="cred-item">
+        <div class="num">10</div>
+        <div class="label">articles on Cursor rules</div>
+      </div>
+      <div class="cred-item">
+        <div class="num">30+</div>
+        <div class="label">experiments run</div>
+      </div>
+      <div class="cred-item">
+        <div class="num">cursor-lint</div>
+        <div class="label">open source tool on npm</div>
       </div>
     </div>
   </section>
 
-  <section class="how">
-    <div class="container">
-      <div class="section-title">How It Works</div>
-      <h2 class="section-heading">Better AI code in 30 seconds</h2>
-      <div class="steps">
-        <div class="step">
-          <div class="step-num">1</div>
-          <h3>Download</h3>
-          <p>Grab a rules pack — free starter or a full framework-specific pack.</p>
-        </div>
-        <div class="step">
-          <div class="step-num">2</div>
-          <h3>Drop In</h3>
-          <p>Copy the <code>.mdc</code> files to <code>.cursor/rules/</code> in your project. That's the entire setup.</p>
-        </div>
-        <div class="step">
-          <div class="step-num">3</div>
-          <h3>Code</h3>
-          <p>Cursor reads the rules automatically. Every completion, every chat — all improved.</p>
-        </div>
-      </div>
+  <section id="free">
+    <div class="free-section">
+      <h3>Not ready for an audit? Start free.</h3>
+      <p>The cursorrules-collection repo has 60+ rules across React, TypeScript, Python, Tailwind, testing, and more. All in .mdc format, ready to drop into your project.</p>
+      <a href="https://github.com/cursorrulespacks/cursorrules-collection" class="btn-primary">Browse Free Rules on GitHub →</a>
+      <p class="stats">Also: <a href="https://www.npmjs.com/package/cursor-lint">cursor-lint</a> on npm to check your rules for errors.</p>
     </div>
   </section>
 
-  <section class="preview">
-    <div class="container">
-      <div class="section-title">What's Inside</div>
-      <h2 class="section-heading">Real rules, real impact</h2>
-      <div class="code-window">
-        <div class="code-titlebar">
-          <span class="code-dot red"></span>
-          <span class="code-dot yellow"></span>
-          <span class="code-dot green"></span>
-          <span class="code-filename">.cursor/rules/react.mdc</span>
-        </div>
-        <div class="code-body">
-          <span class="comment">---</span><br>
-          <span class="highlight">alwaysApply: true</span><br>
-          <span class="highlight">globs: ["*.tsx", "*.jsx"]</span><br>
-          <span class="comment">---</span><br>
-          <br>
-          <span class="comment">## React Patterns</span><br>
-          <span class="rule">- Use <span class="highlight">Server Components</span> by default</span><br>
-          <span class="rule">- Add <span class="highlight">'use client'</span> only when you need interactivity</span><br>
-          <span class="rule">- Before writing a useEffect, ask: can this be</span><br>
-          <span class="rule">&nbsp;&nbsp;computed during render or handled by an event handler?</span><br>
-          <br>
-          <span class="comment">## Anti-Patterns Blocked</span><br>
-          <span class="warn">✗</span> <span class="rule">Never use <span class="warn">any</span> — use unknown and narrow</span><br>
-          <span class="warn">✗</span> <span class="rule">Don't fetch in useEffect for initial data</span><br>
-          <span class="warn">✗</span> <span class="rule">Don't put secrets in client code</span><br>
-          <br>
-          <span class="comment">## When Generating Code</span><br>
-          <span class="rule">- Always include TypeScript types</span><br>
-          <span class="rule">- Include error handling and loading states</span><br>
-          <span class="rule">- Validate all external input with <span class="highlight">Zod</span></span>
-        </div>
-      </div>
-    </div>
-  </section>
+</div>
 
-  <section class="products" id="products">
-    <div class="container">
-      <div class="section-title">Packs</div>
-      <h2 class="section-heading">Choose your stack</h2>
-      <div class="product-grid">
-
-        <a href="https://cursorrulespacks.gumroad.com/l/cursor-safety-checklist" class="product-card featured" style="text-decoration:none;color:inherit;">
-          <div class="product-icon">🛡️</div>
-          <h3>Cursor Safety Checklist</h3>
-          <div class="product-tags">
-            <span class="tag">Agent Mode</span>
-            <span class="tag">.mdc Rules</span>
-            <span class="tag">Git Safety</span>
-          </div>
-          <p class="desc">A one-page pre-flight checklist for AI coding sessions. Covers rules that stick, prompts that destroy comments, new file drift, and git safety. Based on real testing.</p>
-          <div class="product-footer">
-            <span class="price free">FREE</span>
-            <span class="btn-primary" style="padding:10px 24px;font-size:14px;">Download Free →</span>
-          </div>
-        </a>
-
-        <a href="https://cursorrulespacks.gumroad.com/l/complete-cursor-rules-bundle" class="product-card featured" style="text-decoration:none;color:inherit;">
-          <div class="product-icon">📦</div>
-          <h3>Complete Bundle — All 4 Packs</h3>
-          <div class="product-tags">
-            <span class="tag">React</span>
-            <span class="tag">TypeScript</span>
-            <span class="tag">Python</span>
-            <span class="tag">Debugging</span>
-          </div>
-          <p class="desc">Every premium pack in one download. React & Next.js, TypeScript Strict, Python Backend, and Debugging — tested, production-ready, mix and match across projects.</p>
-          <div class="product-footer">
-            <span class="price">$29 <span style="font-size:16px;color:var(--text-dim);text-decoration:line-through;font-weight:400;">$51</span></span>
-            <span class="btn-primary" style="padding:10px 24px;font-size:14px;">Save 43% →</span>
-          </div>
-        </a>
-
-        <a href="https://cursorrulespacks.gumroad.com/l/cursor-starter" class="product-card featured" style="text-decoration:none;color:inherit;">
-          <div class="product-icon">🚀</div>
-          <h3>Starter Rules Pack</h3>
-          <div class="product-tags">
-            <span class="tag">React</span>
-            <span class="tag">TypeScript</span>
-            <span class="tag">Debugging</span>
-          </div>
-          <p class="desc">The best rules from 3 packs in one free file. React component patterns, type safety essentials, and systematic debugging. The perfect starting point.</p>
-          <div class="product-footer">
-            <span class="price free">FREE</span>
-            <span class="btn-primary" style="padding:10px 24px;font-size:14px;">Download Free →</span>
-          </div>
-        </a>
-
-        <a href="https://cursorrulespacks.gumroad.com/l/react-nextjs-rules-pack" class="product-card" style="text-decoration:none;color:inherit;">
-          <div class="product-icon">⚛️</div>
-          <h3>React & Next.js Pack</h3>
-          <div class="product-tags">
-            <span class="tag">React</span>
-            <span class="tag">Next.js</span>
-            <span class="tag">App Router</span>
-          </div>
-          <p class="desc">Server Components, Server Actions, caching strategies, form handling with React Hook Form + Zod, and Next.js App Router patterns.</p>
-          <div class="product-footer">
-            <span class="price">$12</span>
-            <span class="btn-secondary" style="padding:10px 24px;font-size:14px;">View Pack →</span>
-          </div>
-        </a>
-
-        <a href="https://cursorrulespacks.gumroad.com/l/typescript-strict-rules-pack" class="product-card" style="text-decoration:none;color:inherit;">
-          <div class="product-icon">🔷</div>
-          <h3>TypeScript Strict Mode Pack</h3>
-          <div class="product-tags">
-            <span class="tag">TypeScript</span>
-            <span class="tag">Type Safety</span>
-            <span class="tag">Generics</span>
-          </div>
-          <p class="desc">Branded types, discriminated unions, type guards, utility types, Zod integration, and strict compiler settings. Zero any tolerance.</p>
-          <div class="product-footer">
-            <span class="price">$12</span>
-            <span class="btn-secondary" style="padding:10px 24px;font-size:14px;">View Pack →</span>
-          </div>
-        </a>
-
-        <a href="https://cursorrulespacks.gumroad.com/l/python-backend-rules-pack" class="product-card" style="text-decoration:none;color:inherit;">
-          <div class="product-icon">🐍</div>
-          <h3>Python Backend Pack</h3>
-          <div class="product-tags">
-            <span class="tag">Python</span>
-            <span class="tag">FastAPI</span>
-            <span class="tag">SQLAlchemy</span>
-          </div>
-          <p class="desc">FastAPI patterns, SQLAlchemy models, async best practices, Pydantic validation, security hardening, and API design rules.</p>
-          <div class="product-footer">
-            <span class="price">$15</span>
-            <span class="btn-secondary" style="padding:10px 24px;font-size:14px;">View Pack →</span>
-          </div>
-        </a>
-
-        <a href="https://cursorrulespacks.gumroad.com/l/debugging-rules-pack" class="product-card" style="text-decoration:none;color:inherit;">
-          <div class="product-icon">🐛</div>
-          <h3>Debugging Rules Pack</h3>
-          <div class="product-tags">
-            <span class="tag">Debugging</span>
-            <span class="tag">Performance</span>
-            <span class="tag">Error Handling</span>
-          </div>
-          <p class="desc">Systematic debugging process, performance profiling, database debugging, async race conditions, and common error pattern diagnosis.</p>
-          <div class="product-footer">
-            <span class="price">$12</span>
-            <span class="btn-secondary" style="padding:10px 24px;font-size:14px;">View Pack →</span>
-          </div>
-        </a>
-
-      </div>
-    </div>
-  </section>
-
-  <section class="cta-section">
-    <div class="container">
-      <h2>Stop guessing what Cursor will do</h2>
-      <p>Start with the free rules collection or safety checklist. Paid packs if you want more.</p>
-      <a href="https://github.com/cursorrulespacks/cursorrules-collection" class="btn-primary">Get 33 Free Rules →</a>
-      <div style="margin-top:48px;padding-top:48px;border-top:1px solid var(--border);">
-        <p style="color:var(--text-dim);font-size:16px;margin-bottom:8px;">Questions, feedback, or custom pack requests?</p>
-        <a href="mailto:cursorrulespacks@gmail.com" style="font-size:20px;font-weight:600;color:var(--accent);">cursorrulespacks@gmail.com</a>
-      </div>
-    </div>
-  </section>
-
-  <footer>
-    <div class="container">
-      <p>© 2026 nedcodes · <a href="https://cursorrulespacks.gumroad.com">Gumroad</a> · <a href="https://github.com/cursorrulespacks/cursorrules-collection">Free Rules Collection</a> · <a href="https://github.com/cursorrulespacks">GitHub</a> · <a href="https://dev.to/nedcodes">Dev.to</a> · <a href="https://forum.cursor.com/u/nedcodes/">Cursor Forum</a> · <a href="mailto:cursorrulespacks@gmail.com">cursorrulespacks@gmail.com</a></p>
-    </div>
-  </footer>
+<footer>
+  <div class="container">
+    <p>nedcodes · <a href="mailto:cursorrulespacks@gmail.com">cursorrulespacks@gmail.com</a> · <a href="https://github.com/cursorrulespacks">GitHub</a> · <a href="https://dev.to/nedcodes">Dev.to</a> · <a href="https://forum.cursor.com/u/nedcodes">Forum</a> · <a href="https://reddit.com/u/Pleasant-Today60">Reddit</a></p>
+  </div>
+</footer>
 
 </body>
 </html>
