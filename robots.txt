@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://cursorrulespacks.github.io/sitemap.xml
+Sitemap: https://nedcodes-ok.github.io/sitemap.xml
