@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-C5Q5XMK144"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-C5Q5XMK144');
+  </script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Welcome to cursor-doctor Pro — nedcodes</title>
+  <meta name="robots" content="noindex">
+  <link rel="icon" href="/images/favicon.png" type="image/png">
+  <link rel="stylesheet" href="/styles.css">
+  <style>
+    .welcome { padding: 100px 0 80px; max-width: 640px; margin: 0 auto; }
+    .welcome h1 { font-size: 32px; font-weight: 700; letter-spacing: -0.02em; margin-bottom: 8px; }
+    .welcome .sub { color: var(--text-muted); font-size: 16px; margin-bottom: 40px; }
+    .step { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 20px 24px; margin-bottom: 16px; }
+    .step-num { display: inline-block; background: var(--accent); color: white; width: 28px; height: 28px; border-radius: 50%; text-align: center; line-height: 28px; font-size: 14px; font-weight: 700; margin-right: 12px; }
+    .step h3 { display: inline; font-size: 17px; font-weight: 600; }
+    .step p { color: var(--text-muted); font-size: 15px; line-height: 1.6; margin: 10px 0 0; }
+    .step pre { margin: 10px 0 0; }
+    .step code { font-size: 14px; }
+    pre { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 12px 16px; overflow-x: auto; }
+    pre code { color: var(--green); border: none; padding: 0; background: none; }
+    code { background: var(--surface); border: 1px solid var(--border); padding: 2px 6px; border-radius: 4px; font-size: 14px; color: var(--green); }
+    .next { margin-top: 40px; }
+    .next h2 { font-size: 20px; font-weight: 600; margin-bottom: 16px; }
+    .next ul { list-style: none; padding: 0; }
+    .next li { margin-bottom: 12px; }
+    .next a { color: var(--accent); text-decoration: none; font-size: 15px; }
+    .next a:hover { text-decoration: underline; }
+    .next li::before { content: "→ "; color: var(--text-muted); }
+    .tip { background: var(--surface); border-left: 3px solid var(--accent); padding: 16px 20px; border-radius: 0 var(--radius) var(--radius) 0; margin: 32px 0; }
+    .tip p { margin: 0; color: var(--text-muted); font-size: 14px; line-height: 1.6; }
+    .tip strong { color: var(--text); }
+  </style>
+</head>
+<body>
+  <nav class="nav">
+    <div class="nav-inner">
+      <a href="/" class="nav-logo">nedcodes</a>
+      <div class="nav-links">
+        <a href="/#tools">Tools</a>
+        <a href="/guides/">Guides</a>
+        <a href="/playground">Playground</a>
+        <a href="https://github.com/nedcodes-ok" target="_blank" rel="noopener">GitHub</a>
+      </div>
+    </div>
+  </nav>
+
+  <main class="welcome container">
+    <h1>You're in. Here's how to get started.</h1>
+    <p class="sub">Your Pro license key is in the confirmation email from Gumroad. Three commands and you're done.</p>
+
+    <div class="step">
+      <span class="step-num">1</span>
+      <h3>Activate your license</h3>
+      <p>Run this from your project root. Paste the key from your Gumroad receipt.</p>
+      <pre><code>npx cursor-doctor activate YOUR-KEY-HERE</code></pre>
+    </div>
+
+    <div class="step">
+      <span class="step-num">2</span>
+      <h3>See what's wrong</h3>
+      <p>Get the full picture before fixing anything. The audit shows conflicts, redundancy, token waste, and everything <code>scan</code> doesn't cover.</p>
+      <pre><code>npx cursor-doctor audit</code></pre>
+    </div>
+
+    <div class="step">
+      <span class="step-num">3</span>
+      <h3>Fix it</h3>
+      <p>Preview first, then apply. 34 auto-fixers handle frontmatter, globs, duplicates, formatting, and more.</p>
+      <pre><code>npx cursor-doctor fix --dry-run
+npx cursor-doctor fix</code></pre>
+    </div>
+
+    <div class="tip">
+      <p><strong>VS Code / Cursor users:</strong> The extension picks up your Pro license automatically. You'll see quick-fix lightbulbs and the Fix All command in the palette. No extra setup needed.</p>
+    </div>
+
+    <div class="next">
+      <h2>What to try next</h2>
+      <ul>
+        <li><a href="/guides/lint-cursor-rules">How to lint your Cursor rules</a> — understand what each warning means</li>
+        <li><a href="/guides/fix-cursor-rule-conflicts">How to fix rule conflicts</a> — when two rules say different things</li>
+        <li><a href="/guides/cursor-token-budget">Token budget guide</a> — find out if your rules are burning too many tokens</li>
+        <li><a href="/guides/cursor-doctor-ci-github-actions">Set up CI linting</a> — catch rule bugs before they merge</li>
+        <li><a href="/playground">Playground</a> — paste any rule for instant feedback</li>
+      </ul>
+    </div>
+
+    <div class="tip">
+      <p><strong>Something not working?</strong> Email <a href="mailto:hello@nedcodes.dev" style="color:var(--accent);">hello@nedcodes.dev</a> and I'll sort it out. If cursor-doctor Pro doesn't find real issues in your setup, you get a full refund.</p>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-inner">
+        <span class="footer-brand">nedcodes</span>
+        <div class="footer-links">
+          <a href="mailto:hello@nedcodes.dev">hello@nedcodes.dev</a>
+          <a href="https://github.com/nedcodes-ok" target="_blank" rel="noopener">GitHub</a>
+          <a href="https://nedcodes.gumroad.com" target="_blank" rel="noopener">Store</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>
