@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-C5Q5XMK144"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-C5Q5XMK144');
+  </script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>How to lint your Cursor rules — nedcodes</title>
+  <meta name="description" content="Your Cursor rules might have bugs you can't see. Broken frontmatter, conflicting instructions, vague prompts. Here's how to find them with one command.">
+  <meta property="og:title" content="How to lint your Cursor rules">
+  <meta property="og:description" content="Find broken frontmatter, conflicting rules, and vague instructions before they waste your time.">
+  <meta property="og:image" content="https://nedcodes.dev/images/og-card.png">
+  <meta property="og:url" content="https://nedcodes.dev/guides/lint-cursor-rules">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="How to lint your Cursor rules">
+  <meta name="theme-color" content="#0a0a0a">
+  <link rel="canonical" href="https://nedcodes.dev/guides/lint-cursor-rules">
+  <link rel="icon" href="/images/favicon.png" type="image/png">
+  <link rel="stylesheet" href="/styles.css">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "How to lint your Cursor rules",
+    "description": "Your Cursor rules might have bugs you can't see. Broken frontmatter, conflicting instructions, vague prompts. Here's how to find them with one command.",
+    "author": {
+      "@type": "Person",
+      "name": "nedcodes",
+      "url": "https://nedcodes.dev"
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "nedcodes",
+      "url": "https://nedcodes.dev"
+    },
+    "url": "https://nedcodes.dev/guides/lint-cursor-rules",
+    "datePublished": "2026-03-02",
+    "dateModified": "2026-03-02"
+  }
+  </script>
+  <style>
+    .article { padding: 100px 0 80px; max-width: 720px; margin: 0 auto; }
+    .article h1 { font-size: 32px; font-weight: 700; letter-spacing: -0.02em; margin-bottom: 16px; line-height: 1.2; }
+    .article .meta { color: var(--text-muted); font-size: 14px; margin-bottom: 40px; }
+    .article h2 { font-size: 22px; font-weight: 600; margin: 40px 0 16px; letter-spacing: -0.01em; }
+    .article h3 { font-size: 18px; font-weight: 600; margin: 32px 0 12px; }
+    .article p { color: var(--text-muted); font-size: 16px; line-height: 1.7; margin-bottom: 16px; }
+    .article strong { color: var(--text); }
+    .article code { background: var(--surface); border: 1px solid var(--border); padding: 2px 6px; border-radius: 4px; font-size: 14px; color: var(--green); }
+    .article pre { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; overflow-x: auto; margin: 16px 0; }
+    .article pre code { border: none; padding: 0; background: none; font-size: 14px; line-height: 1.6; color: var(--text); }
+    .article ul, .article ol { color: var(--text-muted); font-size: 16px; line-height: 1.7; margin: 0 0 16px 24px; }
+    .article li { margin-bottom: 8px; }
+    .article .callout { background: var(--surface); border-left: 3px solid var(--accent); padding: 16px 20px; border-radius: 0 var(--radius) var(--radius) 0; margin: 24px 0; }
+    .article .callout p { margin: 0; }
+    .issue-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px 20px; margin: 12px 0; }
+    .issue-card h4 { font-size: 15px; font-weight: 600; color: var(--text); margin-bottom: 6px; }
+    .issue-card p { font-size: 14px; margin: 0; }
+    .issue-card .severity { display: inline-block; font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 4px; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.04em; }
+    .severity-error { background: rgba(239, 68, 68, 0.1); color: #ef4444; }
+    .severity-warning { background: rgba(245, 158, 11, 0.1); color: #f59e0b; }
+    .cta-box { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 24px; margin-top: 48px; }
+    .cta-box h3 { font-size: 18px; font-weight: 600; margin-bottom: 8px; }
+    .cta-box p { margin-bottom: 16px; }
+    .back-link { display: inline-block; color: var(--text-muted); font-size: 14px; margin-bottom: 24px; }
+    .back-link:hover { color: var(--text); }
+  </style>
+</head>
+<body>
+  <nav class="nav">
+    <div class="nav-inner">
+      <a href="/" class="nav-logo">nedcodes</a>
+      <div class="nav-links">
+        <a href="/#tools">Tools</a>
+        <a href="/guides/">Guides</a>
+        <a href="/playground">Playground</a>
+        <a href="https://github.com/nedcodes-ok" target="_blank" rel="noopener">GitHub</a>
+      </div>
+    </div>
+  </nav>
+
+  <main class="article container">
+    <a href="/guides/" class="back-link">← All guides</a>
+    <h1>How to lint your Cursor rules</h1>
+    <p class="meta">Find broken frontmatter, conflicting instructions, and vague prompts before they waste your time.</p>
+
+    <h2>Why lint rules at all?</h2>
+    <p>Cursor doesn't tell you when a rule is broken. If the frontmatter is malformed, the rule silently disappears. If two rules contradict each other, Cursor picks one and ignores the other. If a glob pattern has a typo, the rule never loads for the files you intended.</p>
+    <p>You won't see an error. You'll just notice Cursor "ignoring" your instructions and wonder why.</p>
+    <p>Linting catches these problems before they cost you time. One command scans every <code>.mdc</code> file in your project and reports exactly what's wrong.</p>
+
+    <h2>Quick start</h2>
+    <p>Run this from your project root:</p>
+    <pre><code>npx cursor-doctor lint</code></pre>
+    <p>No install needed. No config. It scans <code>.cursor/rules/</code> and prints warnings and errors for each file.</p>
+    <p>For a broader health check that includes a grade, token count, and summary:</p>
+    <pre><code>npx cursor-doctor scan</code></pre>
+
+    <h2>What gets checked</h2>
+    <p>cursor-doctor runs 100+ checks across your rule files. Here are the categories that catch the most real bugs:</p>
+
+    <h3>Frontmatter errors</h3>
+    <p>Every <code>.mdc</code> file needs a YAML frontmatter block between <code>---</code> markers. These checks catch the structural issues that make rules silently fail.</p>
+
+    <div class="issue-card">
+      <span class="severity severity-error">Error</span>
+      <h4>Missing YAML frontmatter</h4>
+      <p>The file has no <code>---</code> block at the top. Cursor may ignore the entire file.</p>
+    </div>
+
+    <div class="issue-card">
+      <span class="severity severity-error">Error</span>
+      <h4>YAML parse error</h4>
+      <p>The frontmatter has a syntax mistake: bad indentation, a missing colon, or an unclosed quote. The rule won't load.</p>
+    </div>
+
+    <div class="issue-card">
+      <span class="severity severity-error">Error</span>
+      <h4>Rule will never load</h4>
+      <p><code>alwaysApply: false</code> with no globs. This rule only activates if you reference it by name, which most people never do.</p>
+    </div>
+
+    <div class="issue-card">
+      <span class="severity severity-warning">Warning</span>
+      <h4>Missing description</h4>
+      <p>The description tells Cursor when to apply the rule. Without one, Cursor has to guess.</p>
+    </div>
+
+    <h3>Glob pattern issues</h3>
+    <p>Globs control which files trigger a rule. A bad glob means the rule loads for the wrong files, or never loads at all.</p>
+
+    <div class="issue-card">
+      <span class="severity severity-warning">Warning</span>
+      <h4>Overly broad glob</h4>
+      <p>Patterns like <code>*</code> or <code>**</code> match everything. If you want the rule to always apply, use <code>alwaysApply: true</code> instead.</p>
+    </div>
+
+    <div class="issue-card">
+      <span class="severity severity-warning">Warning</span>
+      <h4>Windows backslashes in glob</h4>
+      <p>Glob patterns use forward slashes. <code>src\components\*.tsx</code> won't match anything.</p>
+    </div>
+
+    <div class="issue-card">
+      <span class="severity severity-warning">Warning</span>
+      <h4>Comma-separated globs</h4>
+      <p>Using <code>"*.ts, *.tsx"</code> as a single string. This should be a YAML array with one pattern per line.</p>
+    </div>
+
+    <h3>Content quality</h3>
+    <p>Rules that parse correctly can still be ineffective. These checks flag instructions that waste tokens or confuse the model.</p>
+
+    <div class="issue-card">
+      <span class="severity severity-warning">Warning</span>
+      <h4>Vague instruction</h4>
+      <p>Phrases like "write clean code" or "follow best practices" don't change model behavior. They just burn tokens.</p>
+    </div>
+
+    <div class="issue-card">
+      <span class="severity severity-warning">Warning</span>
+      <h4>Empty rule body</h4>
+      <p>The file has frontmatter but no actual instructions after it.</p>
+    </div>
+
+    <div class="issue-card">
+      <span class="severity severity-warning">Warning</span>
+      <h4>Duplicate content</h4>
+      <p>Two or more files contain nearly identical instructions. This wastes your token budget.</p>
+    </div>
+
+    <h3>Cross-file checks</h3>
+    <p>Some problems only appear when you look at all your rules together.</p>
+
+    <div class="issue-card">
+      <span class="severity severity-warning">Warning</span>
+      <h4>Semantic conflict</h4>
+      <p>One rule says "use semicolons," another says "omit semicolons." Cursor picks one silently. The linter finds these contradictions across all your files.</p>
+    </div>
+
+    <div class="issue-card">
+      <span class="severity severity-warning">Warning</span>
+      <h4>Overlapping globs</h4>
+      <p>Two rules target the same files with different instructions. This creates unpredictable behavior.</p>
+    </div>
+
+    <h2>Reading the output</h2>
+    <p>The <code>lint</code> command groups results by file:</p>
+    <pre><code>.cursor/rules/typescript.mdc
+  ⚠  Vague rule detected: "follow best practices"    (line 8)
+  ⚠  No alwaysApply or globs set                     (line 1)
+
+.cursor/rules/react.mdc
+  ✓  No issues
+
+.cursor/rules/testing.mdc
+  ✗  YAML frontmatter error: bad indentation          (line 2)
+
+3 files scanned · 1 error · 2 warnings</code></pre>
+
+    <p>Errors (✗) are things that prevent the rule from working at all. Fix these first. Warnings (⚠) are things that reduce effectiveness or waste tokens.</p>
+
+    <h2>The scan command</h2>
+    <p>If you want the big picture instead of per-file details, use <code>scan</code>:</p>
+    <pre><code>npx cursor-doctor scan</code></pre>
+    <p>This gives you a health grade (A through F), total token count, file count, and a summary of the most important issues. Think of <code>scan</code> as the dashboard and <code>lint</code> as the detailed report.</p>
+
+    <h2>Fix what you find</h2>
+    <p>Most lint issues have straightforward fixes:</p>
+    <ul>
+      <li><strong>Missing frontmatter:</strong> Add a <code>---</code> block with description and either <code>alwaysApply: true</code> or globs.</li>
+      <li><strong>YAML errors:</strong> Check indentation. YAML is whitespace-sensitive. Use spaces, not tabs.</li>
+      <li><strong>Vague instructions:</strong> Replace generic advice with specific, actionable commands. "Handle errors properly" becomes "Wrap route handlers in try-catch. Return <code>{error, code}</code> on failure."</li>
+      <li><strong>Conflicts:</strong> Decide which rule should win and update the other. Or scope them to different files with globs.</li>
+    </ul>
+    <p>For automated fixes, cursor-doctor Pro can fix most issues in one pass:</p>
+    <pre><code>npx cursor-doctor fix --dry-run  # preview changes
+npx cursor-doctor fix            # apply fixes</code></pre>
+
+    <h2>Lint in CI</h2>
+    <p>You can run cursor-doctor in GitHub Actions to catch rule bugs before they merge. The <code>check</code> command exits with a non-zero code on D or F grades, which fails the CI step.</p>
+    <pre><code>npx cursor-doctor check</code></pre>
+    <p>See the full <a href="/guides/cursor-doctor-ci-github-actions">CI setup guide</a> for a copy-paste workflow file.</p>
+
+    <h2>VS Code extension</h2>
+    <p>If you use Cursor (which is built on VS Code), you can get lint results directly in the editor. The <a href="https://marketplace.visualstudio.com/items?itemName=nedcodes.cursor-doctor" target="_blank" rel="noopener">cursor-doctor extension</a> shows warnings inline as you edit <code>.mdc</code> files, with quick-fix suggestions for common issues.</p>
+
+    <h2>Related guides</h2>
+    <ul>
+      <li><a href="/guides/write-cursor-rules-that-work">How to write Cursor rules that actually work</a></li>
+      <li><a href="/guides/fix-cursor-rule-conflicts">How to fix Cursor rule conflicts</a></li>
+      <li><a href="/guides/cursor-token-budget">Cursor token budget: how many rules is too many?</a></li>
+      <li><a href="/guides/cursor-doctor-ci-github-actions">Run cursor-doctor in CI with GitHub Actions</a></li>
+    </ul>
+
+    <div class="cta-box">
+      <h3>Try it now</h3>
+      <p>Run one command to find out what's wrong with your Cursor rules. No install, no config.</p>
+      <pre style="margin-bottom:16px;"><code>npx cursor-doctor lint</code></pre>
+      <p style="margin-bottom:0;">Or paste a single rule into the <a href="/playground">playground</a> for instant feedback.</p>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-inner">
+        <span class="footer-brand">nedcodes</span>
+        <div class="footer-links">
+          <a href="mailto:hello@nedcodes.dev">hello@nedcodes.dev</a>
+          <a href="https://github.com/nedcodes-ok" target="_blank" rel="noopener">GitHub</a>
+          <a href="https://nedcodes.gumroad.com" target="_blank" rel="noopener">Store</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>
