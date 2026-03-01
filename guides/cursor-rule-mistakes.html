@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-C5Q5XMK144"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-C5Q5XMK144');
+  </script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>5 Cursor rule mistakes that make the AI ignore you — nedcodes</title>
+  <meta name="description" content="Your Cursor rules might be silently broken. These 5 common .mdc mistakes cause Cursor to ignore your instructions, contradict itself, or waste your context window.">
+  <meta property="og:title" content="5 Cursor rule mistakes that make the AI ignore you">
+  <meta property="og:description" content="These 5 common .mdc file mistakes cause Cursor to silently ignore your rules. Here's how to find and fix them.">
+  <meta property="og:image" content="https://nedcodes.dev/images/og-card.png">
+  <meta property="og:url" content="https://nedcodes.dev/guides/cursor-rule-mistakes">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="5 Cursor rule mistakes that make the AI ignore you">
+  <meta name="theme-color" content="#0a0a0a">
+  <link rel="canonical" href="https://nedcodes.dev/guides/cursor-rule-mistakes">
+  <link rel="icon" href="/images/favicon.png" type="image/png">
+  <link rel="stylesheet" href="/styles.css">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "5 Cursor rule mistakes that make the AI ignore you",
+    "description": "Your Cursor rules might be silently broken. These 5 common .mdc mistakes cause Cursor to ignore your instructions, contradict itself, or waste your context window.",
+    "author": {
+      "@type": "Person",
+      "name": "nedcodes",
+      "url": "https://nedcodes.dev"
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "nedcodes",
+      "url": "https://nedcodes.dev"
+    },
+    "url": "https://nedcodes.dev/guides/cursor-rule-mistakes",
+    "datePublished": "2026-03-02",
+    "dateModified": "2026-03-02"
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Why does Cursor ignore my rules?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Common causes include: alwaysApply set to false with no globs (the rule never loads), broken YAML frontmatter, contradicting instructions across files, vague instructions like 'write clean code' that don't change model behavior, and glob patterns with Windows backslashes that don't match any files."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How do I check if my Cursor rules are working?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Run 'npx cursor-doctor scan' from your project root. It checks every .mdc file for broken frontmatter, invalid globs, vague instructions, and conflicts between rules. No install needed."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What happens when two Cursor rules contradict each other?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Cursor picks one silently and ignores the other. You won't see an error or warning. The only way to find contradictions is to check all your rules together. cursor-doctor detects 48 types of semantic conflicts across topics like formatting, error handling, imports, and naming."
+        }
+      }
+    ]
+  }
+  </script>
+  <style>
+    .article { padding: 100px 0 80px; max-width: 720px; margin: 0 auto; }
+    .article h1 { font-size: 32px; font-weight: 700; letter-spacing: -0.02em; margin-bottom: 16px; line-height: 1.2; }
+    .article .meta { color: var(--text-muted); font-size: 14px; margin-bottom: 40px; }
+    .article h2 { font-size: 22px; font-weight: 600; margin: 48px 0 16px; letter-spacing: -0.01em; }
+    .article h3 { font-size: 18px; font-weight: 600; margin: 32px 0 12px; }
+    .article p { color: var(--text-muted); font-size: 16px; line-height: 1.7; margin-bottom: 16px; }
+    .article strong { color: var(--text); }
+    .article code { background: var(--surface); border: 1px solid var(--border); padding: 2px 6px; border-radius: 4px; font-size: 14px; color: var(--green); }
+    .article pre { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; overflow-x: auto; margin: 16px 0; }
+    .article pre code { border: none; padding: 0; background: none; font-size: 14px; line-height: 1.6; color: var(--text); }
+    .article ul, .article ol { color: var(--text-muted); font-size: 16px; line-height: 1.7; margin: 0 0 16px 24px; }
+    .article li { margin-bottom: 8px; }
+    .article .callout { background: var(--surface); border-left: 3px solid var(--accent); padding: 16px 20px; border-radius: 0 var(--radius) var(--radius) 0; margin: 24px 0; }
+    .article .callout p { margin: 0; }
+    .shame-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 24px; margin: 24px 0; }
+    .shame-card .label { display: inline-block; font-size: 11px; font-weight: 600; padding: 3px 10px; border-radius: 4px; text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 12px; }
+    .label-error { background: rgba(239, 68, 68, 0.1); color: #ef4444; }
+    .label-warning { background: rgba(245, 158, 11, 0.1); color: #f59e0b; }
+    .label-silent { background: rgba(139, 92, 246, 0.1); color: #8b5cf6; }
+    .shame-card h3 { margin-top: 0; }
+    .shame-card .diagnosis { background: #0d0d0d; border: 1px solid var(--border); border-radius: var(--radius); padding: 12px 16px; margin: 12px 0; font-family: monospace; font-size: 13px; line-height: 1.6; color: var(--text-muted); overflow-x: auto; }
+    .shame-card .diagnosis .err { color: #ef4444; }
+    .shame-card .diagnosis .warn { color: #f59e0b; }
+    .shame-card .diagnosis .ok { color: #22c55e; }
+    .vs { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 16px 0; }
+    .vs-col { background: var(--surface); border-radius: var(--radius); padding: 16px; }
+    .vs-col h4 { font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 8px; }
+    .vs-bad h4 { color: #ef4444; }
+    .vs-good h4 { color: #22c55e; }
+    .cta-box { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 24px; margin-top: 48px; }
+    .cta-box h3 { font-size: 18px; font-weight: 600; margin-bottom: 8px; }
+    .cta-box p { margin-bottom: 16px; }
+    .back-link { display: inline-block; color: var(--text-muted); font-size: 14px; margin-bottom: 24px; }
+    .back-link:hover { color: var(--text); }
+    .faq { margin-top: 48px; }
+    .faq h2 { margin-bottom: 24px; }
+    .faq-item { margin-bottom: 24px; }
+    .faq-item h3 { font-size: 17px; margin: 0 0 8px; }
+    .faq-item p { font-size: 15px; }
+    @media (max-width: 600px) { .vs { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+  <nav class="nav">
+    <div class="nav-inner">
+      <a href="/" class="nav-logo">nedcodes</a>
+      <div class="nav-links">
+        <a href="/#tools">Tools</a>
+        <a href="/guides/">Guides</a>
+        <a href="/playground">Playground</a>
+        <a href="https://github.com/nedcodes-ok" target="_blank" rel="noopener">GitHub</a>
+      </div>
+    </div>
+  </nav>
+
+  <main class="article container">
+    <a href="/guides/" class="back-link">&larr; All guides</a>
+    <h1>5 Cursor rule mistakes that make the AI ignore you</h1>
+    <p class="meta">Your .mdc files might look fine. Cursor won't tell you they're broken.</p>
+
+    <p>Cursor reads your <code>.cursor/rules/</code> directory to understand how you want code written. But it doesn't validate your rules. If something is wrong, you won't see an error. You'll just notice Cursor "ignoring" your instructions and wonder why.</p>
+    <p>These are the five most common mistakes. All of them are found in real, public repositories. All of them are silent.</p>
+
+    <h2>#1. The rule that never loads</h2>
+
+    <div class="shame-card">
+      <span class="label label-error">Silent failure</span>
+      <p>This rule looks correct. It has valid YAML, a clear description, and specific instructions. It will never be applied.</p>
+      <pre><code>---
+description: TypeScript naming conventions
+alwaysApply: false
+---
+Use camelCase for variables and functions.
+Use PascalCase for classes and interfaces.
+Never abbreviate variable names.</code></pre>
+
+      <div class="diagnosis">
+        <span class="err">&#10007;</span> Rule will never load: alwaysApply is false and no globs are set<br>
+        &nbsp;&nbsp;&rarr; Set alwaysApply: true for global rules, or add globs to scope to specific files
+      </div>
+    </div>
+
+    <p><strong>What's happening:</strong> When <code>alwaysApply</code> is <code>false</code> and there are no <code>globs</code>, the rule only activates if you reference it by name in chat. Most people never do. The rule exists in your directory, consumes zero tokens, and does nothing.</p>
+    <p>This is the single most common Cursor rule mistake. Over 5,000 public repositories on GitHub have rules configured this way.</p>
+
+    <h3>The fix</h3>
+    <p>Either set <code>alwaysApply: true</code> if you want it active on every request, or add <code>globs</code> to scope it to specific files:</p>
+    <pre><code>---
+description: TypeScript naming conventions
+globs:
+  - "**/*.ts"
+  - "**/*.tsx"
+---</code></pre>
+
+    <h2>#2. The contradiction</h2>
+
+    <div class="shame-card">
+      <span class="label label-silent">Silently ignored</span>
+      <p>Two rules in the same project. Both set to <code>alwaysApply: true</code>. Both load on every request.</p>
+
+      <div class="vs">
+        <div class="vs-col vs-bad">
+          <h4>style-guide.mdc</h4>
+          <pre style="margin:0;border:none;padding:0;"><code style="font-size:13px;">Always use semicolons at the
+end of statements.
+Use double quotes for strings.</code></pre>
+        </div>
+        <div class="vs-col vs-bad">
+          <h4>javascript.mdc</h4>
+          <pre style="margin:0;border:none;padding:0;"><code style="font-size:13px;">Omit semicolons at the end
+of statements.
+Use single quotes for strings.</code></pre>
+        </div>
+      </div>
+
+      <div class="diagnosis">
+        <span class="err">&#10007;</span> Semantic conflict in semicolons: style-guide.mdc says "Always use semicolons" but javascript.mdc says "Omit semicolons"<br>
+        <span class="err">&#10007;</span> Semantic conflict in quote style: style-guide.mdc says "double quotes" but javascript.mdc says "single quotes"
+      </div>
+    </div>
+
+    <p><strong>What's happening:</strong> Cursor receives both rules in its context window. They say opposite things. Cursor picks one (unpredictably) and follows it. The other rule is dead weight, burning tokens while being ignored.</p>
+    <p>This is especially common when rules are copied from different sources or written by different team members. Each rule passes lint individually. The problem only appears when you check them together.</p>
+
+    <h3>The fix</h3>
+    <p>Decide on one standard and remove the other. If you genuinely need different styles for different files (rare), scope them with non-overlapping globs so they never both load at the same time.</p>
+
+    <h2>#3. The token hog</h2>
+
+    <div class="shame-card">
+      <span class="label label-warning">Wasted tokens</span>
+      <p>Every rule set to <code>alwaysApply: true</code>. Most instructions are things the model already knows.</p>
+      <pre><code>---
+description: General coding standards
+alwaysApply: true
+---
+Write clean code.
+Follow best practices.
+Use proper naming conventions.
+Handle errors properly.</code></pre>
+
+      <div class="diagnosis">
+        <span class="warn">&#9888;</span> Vague rule detected: "write clean code" (line 5)<br>
+        <span class="warn">&#9888;</span> Vague rule detected: "follow best practices" (line 6)<br>
+        <span class="warn">&#9888;</span> Vague rule detected: "use proper naming" (line 7)<br>
+        <span class="warn">&#9888;</span> Vague rule detected: "handle errors properly" (line 8)
+      </div>
+    </div>
+
+    <p><strong>What's happening:</strong> Every rule with <code>alwaysApply: true</code> gets loaded into the context window on every request. Vague instructions like "write clean code" don't change what the model does. They just consume tokens that could be used for actual code context.</p>
+    <p>Over 400 public repositories include "follow best practices" in their Cursor rules. The model already follows best practices. Telling it to do so is like telling a chef to "cook good food."</p>
+
+    <h3>The fix</h3>
+    <p>Replace vague instructions with specific, actionable commands:</p>
+
+    <div class="vs">
+      <div class="vs-col vs-bad">
+        <h4>&#10007; Vague</h4>
+        <p style="font-size:14px;color:var(--text-muted);">Handle errors properly.<br>Use proper naming conventions.<br>Write clean code.</p>
+      </div>
+      <div class="vs-col vs-good">
+        <h4>&#10003; Specific</h4>
+        <p style="font-size:14px;color:var(--text-muted);">Wrap route handlers in try-catch. Return {error, code} on failure.<br>Use camelCase for variables. Prefix booleans with is/has/should.<br>Max 20 lines per function. Extract helpers over nesting.</p>
+      </div>
+    </div>
+
+    <h2>#4. The Windows developer</h2>
+
+    <div class="shame-card">
+      <span class="label label-error">Silent failure</span>
+      <p>Glob patterns written with Windows-style backslashes.</p>
+      <pre><code>---
+description: React component conventions
+globs:
+  - "src\components\*.tsx"
+  - "src\pages\*.tsx"
+alwaysApply: false
+---
+Use functional components with hooks.
+Never use class components.</code></pre>
+
+      <div class="diagnosis">
+        <span class="warn">&#9888;</span> Glob pattern uses Windows backslashes: src\components\*.tsx<br>
+        &nbsp;&nbsp;&rarr; Use forward slashes for cross-platform compatibility.<br>
+        <span class="warn">&#9888;</span> Glob pattern uses Windows backslashes: src\pages\*.tsx<br>
+        &nbsp;&nbsp;&rarr; Use forward slashes for cross-platform compatibility.
+      </div>
+    </div>
+
+    <p><strong>What's happening:</strong> Glob patterns use forward slashes on all platforms. Backslashes are escape characters in most glob implementations. <code>src\components\*.tsx</code> doesn't match <code>src/components/Button.tsx</code>. The rule never loads for the files you intended.</p>
+    <p>This one is invisible because the rule is valid YAML and has correct frontmatter structure. Everything looks right until you realize the globs don't match anything.</p>
+
+    <h3>The fix</h3>
+    <pre><code>globs:
+  - "src/components/**/*.tsx"
+  - "src/pages/**/*.tsx"</code></pre>
+    <p>Always use forward slashes in globs, even on Windows.</p>
+
+    <h2>#5. The YAML crime scene</h2>
+
+    <div class="shame-card">
+      <span class="label label-error">Multiple issues</span>
+      <p>Everything wrong at once. This is a real pattern found across multiple repositories, combined into one example.</p>
+      <pre><code>---
+description: 	Rules for my project
+globs: "*.ts, *.tsx, *.js"
+alwaysApply: "true"
+priority: high
+---
+Follow best practices.
+Write clean code.</code></pre>
+
+      <div class="diagnosis">
+        <span class="err">&#10007;</span> Frontmatter uses boolean strings<br>
+        &nbsp;&nbsp;&rarr; alwaysApply should be a boolean (true or false), not a string ("true"). Remove quotes.<br>
+        <span class="warn">&#9888;</span> Frontmatter indentation uses tabs<br>
+        &nbsp;&nbsp;&rarr; YAML prefers spaces over tabs for indentation. Use 2 spaces.<br>
+        <span class="warn">&#9888;</span> Globs as comma-separated string &mdash; consider using YAML array format<br>
+        <span class="warn">&#9888;</span> Unknown frontmatter key: priority<br>
+        &nbsp;&nbsp;&rarr; Valid keys: description, globs, alwaysApply. Unknown keys are ignored by Cursor.<br>
+        <span class="warn">&#9888;</span> Vague rule detected: "follow best practices" (line 7)<br>
+        <span class="warn">&#9888;</span> Vague rule detected: "write clean code" (line 8)
+      </div>
+    </div>
+
+    <p><strong>What's happening:</strong> Six issues in eight lines. <code>alwaysApply: "true"</code> (with quotes) is a string, not a boolean. Cursor may not interpret it correctly. The <code>priority</code> key doesn't exist in the .mdc spec and gets silently ignored. Comma-separated globs may not parse as you expect. Tabs in YAML can cause parsing errors in some environments. And both instructions are too vague to change model behavior.</p>
+    <p>Each of these issues is minor on its own. Together, they create a rule that might partially work, partially fail, and is impossible to debug without a linter.</p>
+
+    <h3>The fix</h3>
+    <pre><code>---
+description: TypeScript and JavaScript standards
+globs:
+  - "**/*.ts"
+  - "**/*.tsx"
+  - "**/*.js"
+---
+Use const for all variables that aren't reassigned.
+Wrap async operations in try-catch blocks.
+Return early from functions instead of nesting if/else.</code></pre>
+
+    <h2>How to check your own rules</h2>
+    <p>All five of these mistakes are caught automatically. Run this from your project root:</p>
+    <pre><code>npx cursor-doctor lint</code></pre>
+    <p>It scans every <code>.mdc</code> file, checks for 100+ issues including all the patterns above, and tells you exactly what's wrong and how to fix it. No install, no config, zero dependencies.</p>
+    <p>For a quick health grade:</p>
+    <pre><code>npx cursor-doctor scan</code></pre>
+
+    <div class="faq">
+      <h2>Frequently asked questions</h2>
+
+      <div class="faq-item">
+        <h3>Why does Cursor ignore my rules?</h3>
+        <p>Common causes: <code>alwaysApply: false</code> with no globs (rule never loads), broken YAML frontmatter, contradicting instructions across files, vague instructions that don't change model behavior, or glob patterns with Windows backslashes that don't match any files. Run <code>npx cursor-doctor lint</code> to find the exact problem.</p>
+      </div>
+
+      <div class="faq-item">
+        <h3>How do I check if my Cursor rules are working?</h3>
+        <p>Run <code>npx cursor-doctor scan</code> from your project root. It checks every <code>.mdc</code> file for broken frontmatter, invalid globs, vague instructions, and conflicts between rules. No install needed.</p>
+      </div>
+
+      <div class="faq-item">
+        <h3>What happens when two Cursor rules contradict each other?</h3>
+        <p>Cursor picks one silently and ignores the other. You won't see an error or warning. The only way to find contradictions is to check all your rules together. cursor-doctor detects 48 types of semantic conflicts across topics like formatting, error handling, imports, and naming.</p>
+      </div>
+    </div>
+
+    <h2>Related guides</h2>
+    <ul>
+      <li><a href="/guides/lint-cursor-rules">How to lint your Cursor rules</a></li>
+      <li><a href="/guides/write-cursor-rules-that-work">How to write Cursor rules that actually work</a></li>
+      <li><a href="/guides/fix-cursor-rule-conflicts">How to fix Cursor rule conflicts</a></li>
+      <li><a href="/guides/cursor-token-budget">Cursor token budget: how many rules is too many?</a></li>
+    </ul>
+
+    <div class="cta-box">
+      <h3>Check your rules now</h3>
+      <p>Find out if your Cursor rules have any of these problems. One command, 10 seconds.</p>
+      <pre style="margin-bottom:16px;"><code>npx cursor-doctor lint</code></pre>
+      <p style="margin-bottom:0;">Or paste a single rule into the <a href="/playground">playground</a> for instant feedback.</p>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-inner">
+        <span class="footer-brand">nedcodes</span>
+        <div class="footer-links">
+          <a href="mailto:hello@nedcodes.dev">hello@nedcodes.dev</a>
+          <a href="https://github.com/nedcodes-ok" target="_blank" rel="noopener">GitHub</a>
+          <a href="https://nedcodes.gumroad.com" target="_blank" rel="noopener">Store</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>
