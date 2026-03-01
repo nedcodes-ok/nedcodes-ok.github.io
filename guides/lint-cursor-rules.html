@@ -59,18 +59,10 @@
       },
       {
         "@type": "Question",
-        "name": "Why does Cursor ignore my rules?",
+        "name": "Is cursor-doctor free?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "Common causes: missing or malformed YAML frontmatter (the rule silently disappears), alwaysApply set to false with no globs (the rule never loads), conflicting instructions across files (Cursor picks one silently), or vague instructions like 'write clean code' that don't change model behavior. Run 'npx cursor-doctor lint' to find the exact problem."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "What does cursor-doctor check for?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "cursor-doctor runs 100+ checks including: missing or broken YAML frontmatter, invalid glob patterns, vague instructions, empty rule bodies, duplicate content across files, semantic conflicts (e.g. one rule says 'use semicolons' while another says 'omit semicolons'), and rules that will never load due to misconfigured frontmatter."
+          "text": "The scan, lint, init, and install commands are free with no limits. The fix command (auto-fix) requires a Pro license. You can preview what fix would change with npx cursor-doctor fix --dry-run before buying."
         }
       },
       {
@@ -270,22 +262,19 @@
     <p>Both commands are free. No account, no API key.</p>
 
     <h2>How to fix common issues</h2>
-    <p>Most lint issues have straightforward fixes:</p>
+    <p>Most lint issues have straightforward fixes. For YAML and frontmatter errors, check indentation (use spaces, not tabs) and make sure colons have a space after them. For vague instructions, replace generic phrases with specific commands.</p>
+    <p>Deeper guides for the most common categories:</p>
     <ul>
-      <li><strong>Missing frontmatter:</strong> Add a <code>---</code> block at the top of the file with a <code>description</code> field and either <code>alwaysApply: true</code> or <code>globs</code>.</li>
-      <li><strong>YAML errors:</strong> Check indentation. YAML is whitespace-sensitive. Use spaces, not tabs. Make sure colons have a space after them.</li>
-      <li><strong>Vague instructions:</strong> Replace generic advice with specific commands. "Handle errors properly" becomes "Wrap route handlers in try-catch. Return <code>{error, code}</code> on failure."</li>
-      <li><strong>Conflicts:</strong> Decide which rule should win and update or remove the other. Or scope them to different files with globs so they don't both load at once.</li>
-      <li><strong>Duplicates:</strong> Merge near-identical rules into one file. Fewer files means fewer tokens consumed per request.</li>
+      <li><a href="/guides/cursor-rule-mistakes">5 Cursor rule mistakes that make the AI ignore you</a></li>
+      <li><a href="/guides/fix-cursor-rule-conflicts">How to fix Cursor rule conflicts</a></li>
+      <li><a href="/guides/write-cursor-rules-that-work">How to write Cursor rules that actually work</a></li>
     </ul>
-    <p>cursor-doctor Pro can auto-fix most of these in one pass:</p>
+    <p>cursor-doctor Pro can auto-fix most issues in one pass:</p>
     <pre><code>npx cursor-doctor fix --dry-run  # preview what changes
 npx cursor-doctor fix            # apply the fixes</code></pre>
 
     <h2>Lint Cursor rules in CI</h2>
-    <p>You can run cursor-doctor in GitHub Actions to catch rule bugs before they merge. The <code>check</code> command exits with a non-zero code on D or F health grades, which fails the CI step:</p>
-    <pre><code>npx cursor-doctor check</code></pre>
-    <p>This means your team's rules get the same quality gate as your code. See the full <a href="/guides/cursor-doctor-ci-github-actions">CI setup guide</a> for a copy-paste GitHub Actions workflow file.</p>
+    <p>Run <code>npx cursor-doctor check</code> in your CI pipeline. It exits with a non-zero code on D or F health grades, failing the build automatically. See the full <a href="/guides/cursor-doctor-ci-github-actions">CI setup guide</a> for a copy-paste GitHub Actions workflow.</p>
 
     <h2>Lint in your editor</h2>
     <p>If you use Cursor (which is VS Code under the hood), the <a href="https://marketplace.visualstudio.com/items?itemName=nedcodes.cursor-doctor" target="_blank" rel="noopener">cursor-doctor VS Code extension</a> shows lint warnings inline as you edit <code>.mdc</code> files. Issues appear as squiggly underlines with descriptions, and quick-fix suggestions are available from the lightbulb menu.</p>
@@ -299,8 +288,8 @@ npx cursor-doctor fix            # apply the fixes</code></pre>
       </div>
 
       <div class="faq-item">
-        <h3>Why does Cursor ignore my rules?</h3>
-        <p>Common causes: missing or malformed YAML frontmatter (the rule silently disappears), <code>alwaysApply</code> set to <code>false</code> with no globs (the rule never loads), conflicting instructions across files (Cursor picks one silently), or vague instructions like "write clean code" that don't actually change model behavior. <code>npx cursor-doctor lint</code> will tell you exactly which issue your rules have.</p>
+        <h3>Is cursor-doctor free?</h3>
+        <p>The <code>scan</code>, <code>lint</code>, <code>init</code>, and <code>install</code> commands are free with no limits. The <code>fix</code> command (auto-fix) requires a Pro license. You can preview what <code>fix</code> would change with <code>npx cursor-doctor fix --dry-run</code> before buying.</p>
       </div>
 
       <div class="faq-item">

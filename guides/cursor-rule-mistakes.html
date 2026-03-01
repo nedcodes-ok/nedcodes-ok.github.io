@@ -53,23 +53,23 @@
         "name": "Why does Cursor ignore my rules?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "Common causes include: alwaysApply set to false with no globs (the rule never loads), broken YAML frontmatter, contradicting instructions across files, vague instructions like 'write clean code' that don't change model behavior, and glob patterns with Windows backslashes that don't match any files."
+          "text": "The five most common causes: (1) alwaysApply set to false with no globs, so the rule never loads, (2) two rules contradicting each other, so Cursor picks one silently, (3) vague instructions like write clean code that don't change model behavior, (4) glob patterns with Windows backslashes that don't match any files, and (5) broken YAML frontmatter that prevents the rule from parsing."
         }
       },
       {
         "@type": "Question",
-        "name": "How do I check if my Cursor rules are working?",
+        "name": "How many Cursor rules can I have before they stop working?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "Run 'npx cursor-doctor scan' from your project root. It checks every .mdc file for broken frontmatter, invalid globs, vague instructions, and conflicts between rules. No install needed."
+          "text": "There is no hard limit on rule count, but every rule with alwaysApply: true consumes context window tokens. When your rules exceed 10-15% of the context window, Cursor starts dropping code context to make room. Use npx cursor-doctor scan to see your total token usage."
         }
       },
       {
         "@type": "Question",
-        "name": "What happens when two Cursor rules contradict each other?",
+        "name": "Does Cursor validate .mdc files?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "Cursor picks one silently and ignores the other. You won't see an error or warning. The only way to find contradictions is to check all your rules together. cursor-doctor detects 48 types of semantic conflicts across topics like formatting, error handling, imports, and naming."
+          "text": "No. Cursor does not validate .mdc rule files. If the YAML frontmatter is broken, the rule silently disappears. If two rules contradict each other, Cursor picks one without warning. You need an external linter like cursor-doctor to catch these problems."
         }
       }
     ]
@@ -197,11 +197,9 @@ Use single quotes for strings.</code></pre>
       </div>
     </div>
 
-    <p><strong>What's happening:</strong> Cursor receives both rules in its context window. They say opposite things. Cursor picks one (unpredictably) and follows it. The other rule is dead weight, burning tokens while being ignored.</p>
-    <p>This is especially common when rules are copied from different sources or written by different team members. Each rule passes lint individually. The problem only appears when you check them together.</p>
+    <p><strong>What's happening:</strong> Cursor receives both rules in its context window. They say opposite things. Cursor picks one (unpredictably) and follows it. This is especially common when rules are copied from different sources or written by different team members.</p>
 
-    <h3>The fix</h3>
-    <p>Decide on one standard and remove the other. If you genuinely need different styles for different files (rare), scope them with non-overlapping globs so they never both load at the same time.</p>
+    <p><strong>Full guide:</strong> <a href="/guides/fix-cursor-rule-conflicts">How to fix Cursor rule conflicts</a> covers how to find, diagnose, and resolve every type of rule contradiction.</p>
 
     <h2>#3. The token hog</h2>
 
@@ -225,22 +223,11 @@ Handle errors properly.</code></pre>
       </div>
     </div>
 
-    <p><strong>What's happening:</strong> Every rule with <code>alwaysApply: true</code> gets loaded into the context window on every request. Vague instructions like "write clean code" don't change what the model does. They just consume tokens that could be used for actual code context.</p>
-    <p>Over 400 public repositories include "follow best practices" in their Cursor rules. The model already follows best practices. Telling it to do so is like telling a chef to "cook good food."</p>
+    <p><strong>What's happening:</strong> Every rule with <code>alwaysApply: true</code> gets loaded into the context window on every request. Vague instructions like "write clean code" don't change what the model does. They just consume tokens that could be used for actual code context. The model already follows best practices. Telling it to do so is like telling a chef to "cook good food."</p>
 
-    <h3>The fix</h3>
-    <p>Replace vague instructions with specific, actionable commands:</p>
+    <p><strong>The quick fix:</strong> Replace "write clean code" with "max 20 lines per function, extract helpers over nesting." Replace "handle errors properly" with "wrap route handlers in try-catch, return <code>{error, code}</code> on failure."</p>
 
-    <div class="vs">
-      <div class="vs-col vs-bad">
-        <h4>&#10007; Vague</h4>
-        <p style="font-size:14px;color:var(--text-muted);">Handle errors properly.<br>Use proper naming conventions.<br>Write clean code.</p>
-      </div>
-      <div class="vs-col vs-good">
-        <h4>&#10003; Specific</h4>
-        <p style="font-size:14px;color:var(--text-muted);">Wrap route handlers in try-catch. Return {error, code} on failure.<br>Use camelCase for variables. Prefix booleans with is/has/should.<br>Max 20 lines per function. Extract helpers over nesting.</p>
-      </div>
-    </div>
+    <p><strong>Full guide:</strong> <a href="/guides/cursor-token-budget">Cursor token budget: how many rules is too many?</a> covers how to measure your total token usage and cut waste.</p>
 
     <h2>#4. The Windows developer</h2>
 
@@ -293,7 +280,7 @@ Write clean code.</code></pre>
         &nbsp;&nbsp;&rarr; alwaysApply should be a boolean (true or false), not a string ("true"). Remove quotes.<br>
         <span class="warn">&#9888;</span> Frontmatter indentation uses tabs<br>
         &nbsp;&nbsp;&rarr; YAML prefers spaces over tabs for indentation. Use 2 spaces.<br>
-        <span class="warn">&#9888;</span> Globs as comma-separated string &mdash; consider using YAML array format<br>
+        <span class="warn">&#9888;</span> Globs as comma-separated string. Consider using YAML array format<br>
         <span class="warn">&#9888;</span> Unknown frontmatter key: priority<br>
         &nbsp;&nbsp;&rarr; Valid keys: description, globs, alwaysApply. Unknown keys are ignored by Cursor.<br>
         <span class="warn">&#9888;</span> Vague rule detected: "follow best practices" (line 7)<br>
@@ -328,17 +315,17 @@ Return early from functions instead of nesting if/else.</code></pre>
 
       <div class="faq-item">
         <h3>Why does Cursor ignore my rules?</h3>
-        <p>Common causes: <code>alwaysApply: false</code> with no globs (rule never loads), broken YAML frontmatter, contradicting instructions across files, vague instructions that don't change model behavior, or glob patterns with Windows backslashes that don't match any files. Run <code>npx cursor-doctor lint</code> to find the exact problem.</p>
+        <p>The five most common causes: (1) <code>alwaysApply: false</code> with no globs, so the rule never loads, (2) two rules contradicting each other, so Cursor picks one silently, (3) vague instructions like "write clean code" that don't change model behavior, (4) glob patterns with Windows backslashes that don't match any files, and (5) broken YAML frontmatter that prevents the rule from parsing.</p>
       </div>
 
       <div class="faq-item">
-        <h3>How do I check if my Cursor rules are working?</h3>
-        <p>Run <code>npx cursor-doctor scan</code> from your project root. It checks every <code>.mdc</code> file for broken frontmatter, invalid globs, vague instructions, and conflicts between rules. No install needed.</p>
+        <h3>How many Cursor rules can I have before they stop working?</h3>
+        <p>There is no hard limit on rule count, but every rule with <code>alwaysApply: true</code> consumes context window tokens. When your rules exceed 10-15% of the context window, Cursor starts dropping code context to make room. Run <code>npx cursor-doctor scan</code> to see your total token usage.</p>
       </div>
 
       <div class="faq-item">
-        <h3>What happens when two Cursor rules contradict each other?</h3>
-        <p>Cursor picks one silently and ignores the other. You won't see an error or warning. The only way to find contradictions is to check all your rules together. cursor-doctor detects 48 types of semantic conflicts across topics like formatting, error handling, imports, and naming.</p>
+        <h3>Does Cursor validate .mdc files?</h3>
+        <p>No. Cursor does not validate <code>.mdc</code> rule files. If the YAML frontmatter is broken, the rule silently disappears. If two rules contradict each other, Cursor picks one without warning. You need an external linter like <a href="/guides/lint-cursor-rules">cursor-doctor</a> to catch these problems.</p>
       </div>
     </div>
 
