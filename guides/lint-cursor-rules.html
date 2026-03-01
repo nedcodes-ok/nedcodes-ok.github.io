@@ -11,10 +11,10 @@
     gtag('config', 'G-C5Q5XMK144');
   </script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>How to lint your Cursor rules — nedcodes</title>
-  <meta name="description" content="Your Cursor rules might have bugs you can't see. Broken frontmatter, conflicting instructions, vague prompts. Here's how to find them with one command.">
+  <title>How to lint your Cursor rules (find errors in .mdc files) — nedcodes</title>
+  <meta name="description" content="Cursor won't tell you when a rule is broken. Run one command to find frontmatter errors, conflicting instructions, and vague prompts in your .mdc files.">
   <meta property="og:title" content="How to lint your Cursor rules">
-  <meta property="og:description" content="Find broken frontmatter, conflicting rules, and vague instructions before they waste your time.">
+  <meta property="og:description" content="Cursor won't tell you when a rule is broken. Find frontmatter errors, conflicts, and vague prompts with one command.">
   <meta property="og:image" content="https://nedcodes.dev/images/og-card.png">
   <meta property="og:url" content="https://nedcodes.dev/guides/lint-cursor-rules">
   <meta name="twitter:card" content="summary_large_image">
@@ -28,7 +28,7 @@
     "@context": "https://schema.org",
     "@type": "Article",
     "headline": "How to lint your Cursor rules",
-    "description": "Your Cursor rules might have bugs you can't see. Broken frontmatter, conflicting instructions, vague prompts. Here's how to find them with one command.",
+    "description": "Cursor won't tell you when a rule is broken. Run one command to find frontmatter errors, conflicting instructions, and vague prompts in your .mdc files.",
     "author": {
       "@type": "Person",
       "name": "nedcodes",
@@ -42,6 +42,46 @@
     "url": "https://nedcodes.dev/guides/lint-cursor-rules",
     "datePublished": "2026-03-02",
     "dateModified": "2026-03-02"
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "How do I check if my Cursor rules are working?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Run 'npx cursor-doctor lint' from your project root. It scans every .mdc file in .cursor/rules/ and reports broken frontmatter, invalid globs, vague instructions, and conflicts between rules. No install or config needed."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Why does Cursor ignore my rules?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Common causes: missing or malformed YAML frontmatter (the rule silently disappears), alwaysApply set to false with no globs (the rule never loads), conflicting instructions across files (Cursor picks one silently), or vague instructions like 'write clean code' that don't change model behavior. Run 'npx cursor-doctor lint' to find the exact problem."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What does cursor-doctor check for?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "cursor-doctor runs 100+ checks including: missing or broken YAML frontmatter, invalid glob patterns, vague instructions, empty rule bodies, duplicate content across files, semantic conflicts (e.g. one rule says 'use semicolons' while another says 'omit semicolons'), and rules that will never load due to misconfigured frontmatter."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Can I lint Cursor rules in CI?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes. Run 'npx cursor-doctor check' in your CI pipeline. It exits with a non-zero code on D or F health grades, which fails the build. See the cursor-doctor CI guide for a copy-paste GitHub Actions workflow."
+        }
+      }
+    ]
   }
   </script>
   <style>
@@ -65,11 +105,20 @@
     .issue-card .severity { display: inline-block; font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 4px; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.04em; }
     .severity-error { background: rgba(239, 68, 68, 0.1); color: #ef4444; }
     .severity-warning { background: rgba(245, 158, 11, 0.1); color: #f59e0b; }
+    .tldr { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 20px 24px; margin-bottom: 32px; }
+    .tldr h2 { margin: 0 0 12px; font-size: 16px; }
+    .tldr p { margin: 0 0 12px; font-size: 15px; }
+    .tldr pre { margin: 0; }
     .cta-box { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 24px; margin-top: 48px; }
     .cta-box h3 { font-size: 18px; font-weight: 600; margin-bottom: 8px; }
     .cta-box p { margin-bottom: 16px; }
     .back-link { display: inline-block; color: var(--text-muted); font-size: 14px; margin-bottom: 24px; }
     .back-link:hover { color: var(--text); }
+    .faq { margin-top: 48px; }
+    .faq h2 { margin-bottom: 24px; }
+    .faq-item { margin-bottom: 24px; }
+    .faq-item h3 { font-size: 17px; margin: 0 0 8px; }
+    .faq-item p { font-size: 15px; }
   </style>
 </head>
 <body>
@@ -90,23 +139,29 @@
     <h1>How to lint your Cursor rules</h1>
     <p class="meta">Find broken frontmatter, conflicting instructions, and vague prompts before they waste your time.</p>
 
-    <h2>Why lint rules at all?</h2>
-    <p>Cursor doesn't tell you when a rule is broken. If the frontmatter is malformed, the rule silently disappears. If two rules contradict each other, Cursor picks one and ignores the other. If a glob pattern has a typo, the rule never loads for the files you intended.</p>
-    <p>You won't see an error. You'll just notice Cursor "ignoring" your instructions and wonder why.</p>
-    <p>Linting catches these problems before they cost you time. One command scans every <code>.mdc</code> file in your project and reports exactly what's wrong.</p>
+    <div class="tldr">
+      <h2>TL;DR</h2>
+      <p>Run this from your project root. No install, no config:</p>
+      <pre><code>npx cursor-doctor lint</code></pre>
+    </div>
+
+    <h2>Why lint Cursor rules?</h2>
+    <p>Cursor doesn't tell you when a rule is broken. If the YAML frontmatter is malformed, the rule silently disappears. If two rules contradict each other, Cursor picks one and ignores the other. If a glob pattern has a typo, the rule never loads for the files you intended.</p>
+    <p>You won't see an error message. You'll just notice Cursor "ignoring" your instructions and spend 20 minutes wondering why your <code>.mdc</code> files aren't working.</p>
+    <p>Linting catches these problems before they cost you time. One command scans your project and reports exactly what's wrong with each rule file.</p>
 
     <h2>Quick start</h2>
-    <p>Run this from your project root:</p>
+    <p>Run this from your project root (where your <code>.cursor/</code> directory lives):</p>
     <pre><code>npx cursor-doctor lint</code></pre>
-    <p>No install needed. No config. It scans <code>.cursor/rules/</code> and prints warnings and errors for each file.</p>
-    <p>For a broader health check that includes a grade, token count, and summary:</p>
+    <p>It scans <code>.cursor/rules/</code>, any <code>.cursorrules</code> file, and agent skill files. No install needed, no config files, zero dependencies.</p>
+    <p>For a broader health check that includes a letter grade, total token count, and summary:</p>
     <pre><code>npx cursor-doctor scan</code></pre>
 
     <h2>What gets checked</h2>
-    <p>cursor-doctor runs 100+ checks across your rule files. Here are the categories that catch the most real bugs:</p>
+    <p>cursor-doctor runs 100+ checks across your rule files. Here are the categories that catch the most real bugs.</p>
 
     <h3>Frontmatter errors</h3>
-    <p>Every <code>.mdc</code> file needs a YAML frontmatter block between <code>---</code> markers. These checks catch the structural issues that make rules silently fail.</p>
+    <p>Every <code>.mdc</code> file needs a YAML frontmatter block between <code>---</code> markers. These checks catch the structural issues that make Cursor rules silently fail.</p>
 
     <div class="issue-card">
       <span class="severity severity-error">Error</span>
@@ -116,20 +171,20 @@
 
     <div class="issue-card">
       <span class="severity severity-error">Error</span>
-      <h4>YAML parse error</h4>
-      <p>The frontmatter has a syntax mistake: bad indentation, a missing colon, or an unclosed quote. The rule won't load.</p>
+      <h4>YAML frontmatter parse error</h4>
+      <p>The frontmatter has a syntax mistake: bad indentation, a missing colon, or an unclosed quote. The rule won't load correctly.</p>
     </div>
 
     <div class="issue-card">
       <span class="severity severity-error">Error</span>
       <h4>Rule will never load</h4>
-      <p><code>alwaysApply: false</code> with no globs. This rule only activates if you reference it by name, which most people never do.</p>
+      <p><code>alwaysApply: false</code> with no globs. This rule only activates when you reference it by name in chat, which is easy to forget.</p>
     </div>
 
     <div class="issue-card">
       <span class="severity severity-warning">Warning</span>
       <h4>Missing description</h4>
-      <p>The description tells Cursor when to apply the rule. Without one, Cursor has to guess.</p>
+      <p>The description field tells Cursor when to apply the rule. Without one, Cursor has to guess based on the content alone.</p>
     </div>
 
     <h3>Glob pattern issues</h3>
@@ -138,97 +193,126 @@
     <div class="issue-card">
       <span class="severity severity-warning">Warning</span>
       <h4>Overly broad glob</h4>
-      <p>Patterns like <code>*</code> or <code>**</code> match everything. If you want the rule to always apply, use <code>alwaysApply: true</code> instead.</p>
+      <p>Patterns like <code>*</code> or <code>**</code> match everything. If you want the rule to always apply, use <code>alwaysApply: true</code> instead. It's clearer and avoids confusing Cursor's rule loading.</p>
     </div>
 
     <div class="issue-card">
       <span class="severity severity-warning">Warning</span>
       <h4>Windows backslashes in glob</h4>
-      <p>Glob patterns use forward slashes. <code>src\components\*.tsx</code> won't match anything.</p>
+      <p>Glob patterns use forward slashes. <code>src\components\*.tsx</code> won't match anything on any platform.</p>
     </div>
 
     <div class="issue-card">
       <span class="severity severity-warning">Warning</span>
       <h4>Comma-separated globs</h4>
-      <p>Using <code>"*.ts, *.tsx"</code> as a single string. This should be a YAML array with one pattern per line.</p>
+      <p>Using <code>"*.ts, *.tsx"</code> as a single string instead of a YAML array. This may not match what you expect. Use separate entries instead.</p>
     </div>
 
     <h3>Content quality</h3>
-    <p>Rules that parse correctly can still be ineffective. These checks flag instructions that waste tokens or confuse the model.</p>
+    <p>Rules that parse correctly can still be ineffective. These checks flag instructions that waste tokens or don't change model behavior.</p>
 
     <div class="issue-card">
       <span class="severity severity-warning">Warning</span>
       <h4>Vague instruction</h4>
-      <p>Phrases like "write clean code" or "follow best practices" don't change model behavior. They just burn tokens.</p>
+      <p>Phrases like "write clean code" or "follow best practices" sound helpful but don't change what Cursor does. They just burn context window tokens. Replace them with specific, actionable commands.</p>
     </div>
 
     <div class="issue-card">
       <span class="severity severity-warning">Warning</span>
       <h4>Empty rule body</h4>
-      <p>The file has frontmatter but no actual instructions after it.</p>
+      <p>The file has frontmatter but no actual instructions after it. The rule exists but does nothing.</p>
     </div>
 
     <div class="issue-card">
       <span class="severity severity-warning">Warning</span>
       <h4>Duplicate content</h4>
-      <p>Two or more files contain nearly identical instructions. This wastes your token budget.</p>
+      <p>Two or more <code>.mdc</code> files contain nearly identical instructions. This wastes your token budget by feeding the same text to the model twice.</p>
     </div>
 
     <h3>Cross-file checks</h3>
-    <p>Some problems only appear when you look at all your rules together.</p>
+    <p>Some problems only show up when you look at all your rules together.</p>
 
     <div class="issue-card">
       <span class="severity severity-warning">Warning</span>
       <h4>Semantic conflict</h4>
-      <p>One rule says "use semicolons," another says "omit semicolons." Cursor picks one silently. The linter finds these contradictions across all your files.</p>
+      <p>One rule says "use semicolons," another says "omit semicolons." Cursor picks one silently. The linter checks 48 contradiction patterns across topics like formatting, error handling, imports, and naming.</p>
     </div>
 
     <div class="issue-card">
       <span class="severity severity-warning">Warning</span>
-      <h4>Overlapping globs</h4>
-      <p>Two rules target the same files with different instructions. This creates unpredictable behavior.</p>
+      <h4>Identical globs across rules</h4>
+      <p>Multiple rules share the exact same glob patterns. This often means they should be merged into one file, or their scopes should be narrowed.</p>
     </div>
 
     <h2>Reading the output</h2>
     <p>The <code>lint</code> command groups results by file:</p>
     <pre><code>.cursor/rules/typescript.mdc
-  ⚠  Vague rule detected: "follow best practices"    (line 8)
-  ⚠  No alwaysApply or globs set                     (line 1)
+  ⚠ Vague rule detected: "follow best practices"    (line 8)
+  ⚠ No alwaysApply or globs set                     (line 1)
 
 .cursor/rules/react.mdc
-  ✓  No issues
+  ✓ All checks passed
 
 .cursor/rules/testing.mdc
-  ✗  YAML frontmatter error: bad indentation          (line 2)
+  ✗ YAML frontmatter error: bad indentation          (line 2)
 
-3 files scanned · 1 error · 2 warnings</code></pre>
+──────────────────────────────────────────────────
+1 error(s), 2 warning(s), 1 passed</code></pre>
 
-    <p>Errors (✗) are things that prevent the rule from working at all. Fix these first. Warnings (⚠) are things that reduce effectiveness or waste tokens.</p>
+    <p>Errors (✗) prevent the rule from working at all. Fix these first. Warnings (⚠) reduce effectiveness or waste tokens.</p>
 
-    <h2>The scan command</h2>
-    <p>If you want the big picture instead of per-file details, use <code>scan</code>:</p>
-    <pre><code>npx cursor-doctor scan</code></pre>
-    <p>This gives you a health grade (A through F), total token count, file count, and a summary of the most important issues. Think of <code>scan</code> as the dashboard and <code>lint</code> as the detailed report.</p>
+    <h2>scan vs. lint</h2>
+    <p>cursor-doctor has two ways to check your rules:</p>
+    <ul>
+      <li><strong><code>lint</code></strong> shows every issue in every file. Use it when you want the full per-file breakdown.</li>
+      <li><strong><code>scan</code></strong> gives you a health grade (A through F), total token count, file count, and a summary of the most important issues. Think of <code>scan</code> as the dashboard and <code>lint</code> as the detailed report.</li>
+    </ul>
+    <p>Both commands are free. No account, no API key.</p>
 
-    <h2>Fix what you find</h2>
+    <h2>How to fix common issues</h2>
     <p>Most lint issues have straightforward fixes:</p>
     <ul>
-      <li><strong>Missing frontmatter:</strong> Add a <code>---</code> block with description and either <code>alwaysApply: true</code> or globs.</li>
-      <li><strong>YAML errors:</strong> Check indentation. YAML is whitespace-sensitive. Use spaces, not tabs.</li>
-      <li><strong>Vague instructions:</strong> Replace generic advice with specific, actionable commands. "Handle errors properly" becomes "Wrap route handlers in try-catch. Return <code>{error, code}</code> on failure."</li>
-      <li><strong>Conflicts:</strong> Decide which rule should win and update the other. Or scope them to different files with globs.</li>
+      <li><strong>Missing frontmatter:</strong> Add a <code>---</code> block at the top of the file with a <code>description</code> field and either <code>alwaysApply: true</code> or <code>globs</code>.</li>
+      <li><strong>YAML errors:</strong> Check indentation. YAML is whitespace-sensitive. Use spaces, not tabs. Make sure colons have a space after them.</li>
+      <li><strong>Vague instructions:</strong> Replace generic advice with specific commands. "Handle errors properly" becomes "Wrap route handlers in try-catch. Return <code>{error, code}</code> on failure."</li>
+      <li><strong>Conflicts:</strong> Decide which rule should win and update or remove the other. Or scope them to different files with globs so they don't both load at once.</li>
+      <li><strong>Duplicates:</strong> Merge near-identical rules into one file. Fewer files means fewer tokens consumed per request.</li>
     </ul>
-    <p>For automated fixes, cursor-doctor Pro can fix most issues in one pass:</p>
-    <pre><code>npx cursor-doctor fix --dry-run  # preview changes
-npx cursor-doctor fix            # apply fixes</code></pre>
+    <p>cursor-doctor Pro can auto-fix most of these in one pass:</p>
+    <pre><code>npx cursor-doctor fix --dry-run  # preview what changes
+npx cursor-doctor fix            # apply the fixes</code></pre>
 
-    <h2>Lint in CI</h2>
-    <p>You can run cursor-doctor in GitHub Actions to catch rule bugs before they merge. The <code>check</code> command exits with a non-zero code on D or F grades, which fails the CI step.</p>
+    <h2>Lint Cursor rules in CI</h2>
+    <p>You can run cursor-doctor in GitHub Actions to catch rule bugs before they merge. The <code>check</code> command exits with a non-zero code on D or F health grades, which fails the CI step:</p>
     <pre><code>npx cursor-doctor check</code></pre>
-    <p>See the full <a href="/guides/cursor-doctor-ci-github-actions">CI setup guide</a> for a copy-paste workflow file.</p>
+    <p>This means your team's rules get the same quality gate as your code. See the full <a href="/guides/cursor-doctor-ci-github-actions">CI setup guide</a> for a copy-paste GitHub Actions workflow file.</p>
 
-    <h2>VS Code extension</h2>
-    <p>If you use Cursor (which is built on VS Code), you can get lint results directly in the editor. The <a href="https://marketplace.visualstudio.com/items?itemName=nedcodes.cursor-doctor" target="_blank" rel="noopener">cursor-doctor extension</a> shows warnings inline as you edit <code>.mdc</code> files, with quick-fix suggestions for common issues.</p>
+    <h2>Lint in your editor</h2>
+    <p>If you use Cursor (which is VS Code under the hood), the <a href="https://marketplace.visualstudio.com/items?itemName=nedcodes.cursor-doctor" target="_blank" rel="noopener">cursor-doctor VS Code extension</a> shows lint warnings inline as you edit <code>.mdc</code> files. Issues appear as squiggly underlines with descriptions, and quick-fix suggestions are available from the lightbulb menu.</p>
+
+    <div class="faq">
+      <h2>Frequently asked questions</h2>
+
+      <div class="faq-item">
+        <h3>How do I check if my Cursor rules are working?</h3>
+        <p>Run <code>npx cursor-doctor lint</code> from your project root. It scans every <code>.mdc</code> file and reports broken frontmatter, invalid globs, vague instructions, and conflicts between rules. No install or config needed.</p>
+      </div>
+
+      <div class="faq-item">
+        <h3>Why does Cursor ignore my rules?</h3>
+        <p>Common causes: missing or malformed YAML frontmatter (the rule silently disappears), <code>alwaysApply</code> set to <code>false</code> with no globs (the rule never loads), conflicting instructions across files (Cursor picks one silently), or vague instructions like "write clean code" that don't actually change model behavior. <code>npx cursor-doctor lint</code> will tell you exactly which issue your rules have.</p>
+      </div>
+
+      <div class="faq-item">
+        <h3>What does cursor-doctor check for?</h3>
+        <p>100+ checks including: missing or broken YAML frontmatter, invalid glob patterns, vague instructions, empty rule bodies, duplicate content across files, 48 semantic contradiction patterns (like one rule saying "use semicolons" while another says "omit semicolons"), and rules that will never load due to misconfigured frontmatter.</p>
+      </div>
+
+      <div class="faq-item">
+        <h3>Can I lint Cursor rules in CI?</h3>
+        <p>Yes. Run <code>npx cursor-doctor check</code> in your CI pipeline. It exits with a non-zero code on D or F health grades, which fails the build. See the <a href="/guides/cursor-doctor-ci-github-actions">CI setup guide</a> for a GitHub Actions workflow.</p>
+      </div>
+    </div>
 
     <h2>Related guides</h2>
     <ul>
@@ -240,7 +324,7 @@ npx cursor-doctor fix            # apply fixes</code></pre>
 
     <div class="cta-box">
       <h3>Try it now</h3>
-      <p>Run one command to find out what's wrong with your Cursor rules. No install, no config.</p>
+      <p>Run one command to find out what's wrong with your Cursor rules. No install, no config, zero dependencies.</p>
       <pre style="margin-bottom:16px;"><code>npx cursor-doctor lint</code></pre>
       <p style="margin-bottom:0;">Or paste a single rule into the <a href="/playground">playground</a> for instant feedback.</p>
     </div>
