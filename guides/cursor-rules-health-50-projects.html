@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-C5Q5XMK144"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-C5Q5XMK144');
+  </script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>I ran cursor-doctor on 50 real projects. Here's what broke. — nedcodes</title>
+  <meta name="description" content="We scanned 50 real GitHub projects with cursor-doctor. 60% scored a C grade. The #1 problem: rules that waste your context window. Here are the 5 most common Cursor rule mistakes and how to fix them.">
+  <meta property="og:title" content="I ran cursor-doctor on 50 real projects. Here's what broke.">
+  <meta property="og:description" content="60% of real-world Cursor setups have broken rules. We scanned 50 projects and found 998 issues. Here are the 5 most common problems.">
+  <meta property="og:image" content="https://nedcodes.dev/images/og-card.png">
+  <meta property="og:url" content="https://nedcodes.dev/guides/cursor-rules-health-50-projects">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="I ran cursor-doctor on 50 real projects. Here's what broke.">
+  <meta name="theme-color" content="#0a0a0a">
+  <link rel="canonical" href="https://nedcodes.dev/guides/cursor-rules-health-50-projects">
+  <link rel="icon" href="/images/favicon.png" type="image/png">
+  <link rel="stylesheet" href="/styles.css">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "I ran cursor-doctor on 50 real projects. Here's what broke.",
+    "description": "We scanned 50 real GitHub projects with cursor-doctor. 60% scored a C grade. Here are the 5 most common Cursor rule mistakes.",
+    "author": {
+      "@type": "Person",
+      "name": "nedcodes",
+      "url": "https://nedcodes.dev"
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "nedcodes",
+      "url": "https://nedcodes.dev"
+    },
+    "url": "https://nedcodes.dev/guides/cursor-rules-health-50-projects",
+    "datePublished": "2026-03-04",
+    "dateModified": "2026-03-04"
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Why does Cursor ignore my rules?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "The most common reasons Cursor ignores rules: rules are too long and waste the context window, globs arrays are empty so the rule targets no files, instructions use vague language like 'try to' or 'consider', YAML frontmatter is missing or malformed, or multiple rules contradict each other. Running npx cursor-doctor scan identifies all of these in about 2 seconds."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How healthy are Cursor rules in most projects?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "We scanned 50 real GitHub projects and found that 60% scored a C grade, with an average health of 67%. Only 6% of projects had healthy rules (grade A). The most common problem was rules that waste the context window by being too long."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What is the most common Cursor rule mistake?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Token waste. Rules with 2,000 to 5,000+ characters burn 500 to 1,250 tokens of context window each. In our scan of 50 projects, this was the number one issue, accounting for 15% of all problems found."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How do I check if my Cursor rules are working?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Run npx cursor-doctor scan in your project directory. It gives you a health grade from A to F in about 2 seconds. For a detailed breakdown of every issue, run npx cursor-doctor lint. Both commands are free."
+        }
+      }
+    ]
+  }
+  </script>
+</head>
+<body>
+  <header>
+    <nav>
+      <a href="/" class="logo">nedcodes</a>
+      <div class="nav-links">
+        <a href="/guides">Guides</a>
+        <a href="/playground">Playground</a>
+        <a href="/pro">Pro</a>
+        <a href="https://github.com/nedcodes-ok/cursor-doctor" target="_blank">GitHub</a>
+      </div>
+    </nav>
+  </header>
+
+  <main class="guide-content">
+    <article>
+      <h1>I scanned 50 real projects with cursor-doctor. Most Cursor rules are broken.</h1>
+
+      <p class="lead">How healthy are Cursor rules in the wild? Not in tutorials or curated examples, but in real GitHub repos where people are actually shipping code. I cloned 50 public repos that use Cursor rules and ran <code>npx cursor-doctor scan</code> on every one.</p>
+
+      <nav class="toc">
+        <strong>Contents</strong>
+        <ol>
+          <li><a href="#results">The results: 60% scored a C</a></li>
+          <li><a href="#token-waste">Problem 1: Rules that eat your context window</a></li>
+          <li><a href="#empty-globs">Problem 2: Rules that target nothing</a></li>
+          <li><a href="#vague-instructions">Problem 3: Vague instructions Cursor ignores</a></li>
+          <li><a href="#dead-code">Problem 4: Dead code burning tokens</a></li>
+          <li><a href="#missing-frontmatter">Problem 5: Missing frontmatter</a></li>
+          <li><a href="#healthy-projects">What the healthy projects did differently</a></li>
+          <li><a href="#check-yours">Check your own setup</a></li>
+        </ol>
+      </nav>
+
+      <h2 id="results">The results: 60% of projects scored a C</h2>
+
+      <pre><code>A:  3 ███                          (6%)
+B: 15 ███████████████              (30%)
+C: 30 ██████████████████████████████ (60%)
+D:  2 ██                           (4%)</code></pre>
+
+      <p><strong>Average health score: 67%.</strong> Only 3 out of 50 projects had healthy Cursor rules. The median project scored 69%, which is a C. That means most Cursor setups have enough issues to noticeably affect how well the AI follows instructions.</p>
+
+      <p>I dug deeper into 15 of those projects and categorized every issue cursor-doctor flagged. <strong>998 total issues.</strong> Here are the five problems that kept showing up.</p>
+
+      <h2 id="token-waste">1. Rules that eat your context window (146 issues)</h2>
+
+      <p>This was the single most common problem. Nearly <strong>15% of all issues</strong> were rules that are too long.</p>
+
+      <p>Rules with 2,000+ characters each. Some over 5,000. Each one burns 500 to 1,250 tokens of your context window before Cursor even reads your code.</p>
+
+      <p>One project had 12 rules averaging 4,000 characters each. That is roughly 12,000 tokens of instructions alone, leaving less room for the code Cursor needs to work with.</p>
+
+      <p><strong>The fix:</strong> Split long rules into focused ones. Remove the parts that repeat what Cursor already knows. Cut examples down to one or two instead of eight.</p>
+
+      <h2 id="empty-globs">2. Rules that target nothing (36 issues)</h2>
+
+      <p>Empty globs arrays. The rule exists, has a description, has instructions, but the <code>globs</code> field is <code>[]</code>. Cursor doesn't know which files the rule applies to.</p>
+
+      <pre><code>---
+description: React component standards
+globs: []
+---</code></pre>
+
+      <p><strong>The fix:</strong> Add the right glob pattern (<code>**/*.tsx</code>) or set <code>alwaysApply: true</code> if the rule should apply everywhere.</p>
+
+      <h2 id="vague-instructions">3. Vague instructions Cursor ignores (27 issues)</h2>
+
+      <p>"Try to keep functions small." "Consider using TypeScript." "Maybe add error handling."</p>
+
+      <p>Cursor doesn't try, consider, or maybe. It either follows the instruction or it doesn't. Weak language gives the model permission to ignore you.</p>
+
+      <p>Compare: <em>"Try to use TypeScript"</em> vs <em>"All new files must use TypeScript. No .js files except config files in the project root."</em></p>
+
+      <h2 id="dead-code">4. Dead code burning tokens (32 issues)</h2>
+
+      <p>Commented-out sections, TODO markers, notes-to-self. These all consume tokens and confuse the model about what is actually a rule and what is a draft.</p>
+
+      <pre><code>&lt;!-- TODO: add React rules later --&gt;
+&lt;!-- OLD: use class components --&gt;</code></pre>
+
+      <p>If it is commented out, delete it. Rules are not source code. There is no reason to keep old versions around.</p>
+
+      <h2 id="missing-frontmatter">5. Missing or broken frontmatter (48 issues)</h2>
+
+      <p>28 projects had rules with no description. 20 had rules with no YAML frontmatter at all. Without frontmatter, Cursor cannot properly categorize or prioritize the rule. Without a description, you have no idea what the rule does when you revisit your setup six months later.</p>
+
+      <p>A properly formatted rule file needs at minimum:</p>
+
+      <pre><code>---
+description: Enforces consistent error handling in API routes
+globs: "src/api/**/*.ts"
+---
+All API route handlers must wrap their body in a try/catch block.
+Return a 500 status with a generic error message. Log the full error to the server console.</code></pre>
+
+      <h2 id="healthy-projects">What the healthy projects did differently</h2>
+
+      <p>The 3 projects that scored an A had a few things in common:</p>
+
+      <ul>
+        <li><strong>Short, focused rules.</strong> One concern per file. Under 1,000 characters each.</li>
+        <li><strong>Correct frontmatter.</strong> Every rule had a description, appropriate globs, and explicit <code>alwaysApply</code> settings.</li>
+        <li><strong>Concrete instructions.</strong> No "try to" or "consider." Direct statements with examples.</li>
+        <li><strong>No dead weight.</strong> No commented code, no TODOs, no redundant instructions.</li>
+      </ul>
+
+      <h2 id="check-yours">Check your own Cursor rules</h2>
+
+      <pre><code>npx cursor-doctor scan</code></pre>
+
+      <p>Takes about 2 seconds. Gives you a health grade from A through F and tells you exactly what to fix. The scan and lint commands are free, no install needed.</p>
+
+      <p>For a detailed breakdown of every issue, file by file:</p>
+
+      <pre><code>npx cursor-doctor lint</code></pre>
+
+      <p><a href="https://github.com/nedcodes-ok/cursor-doctor">cursor-doctor on GitHub</a></p>
+
+      <p>Also available as a <a href="https://marketplace.visualstudio.com/items?itemName=nedcodes.cursor-doctor">VS Code and Cursor extension</a> with inline diagnostics.</p>
+    </article>
+  </main>
+
+  <footer>
+    <div class="footer-content">
+      <p>&copy; 2026 nedcodes</p>
+      <div class="footer-links">
+        <a href="https://github.com/nedcodes-ok">GitHub</a>
+        <a href="https://dev.to/nedcodes">Dev.to</a>
+        <a href="https://nedcodes.gumroad.com">Gumroad</a>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>
