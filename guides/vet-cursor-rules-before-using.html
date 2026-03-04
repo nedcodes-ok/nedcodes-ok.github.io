@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-C5Q5XMK144"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-C5Q5XMK144');
+  </script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>How to vet Cursor rules before using them — nedcodes</title>
+  <meta name="description" content="Found a Cursor rule set on GitHub? Here's a 5-point checklist to check if it's worth using. Avoid broken rules, token waste, and vague instructions before they hit your project.">
+  <meta property="og:title" content="How to vet Cursor rules before using them">
+  <meta property="og:description" content="A practical checklist for evaluating Cursor rules from awesome-cursorrules, GitHub, or anywhere else before you paste them into your project.">
+  <meta property="og:image" content="https://nedcodes.dev/images/og-card.png">
+  <meta property="og:url" content="https://nedcodes.dev/guides/vet-cursor-rules-before-using">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="How to vet Cursor rules before using them">
+  <meta name="theme-color" content="#0a0a0a">
+  <link rel="canonical" href="https://nedcodes.dev/guides/vet-cursor-rules-before-using">
+  <link rel="icon" href="/images/favicon.png" type="image/png">
+  <link rel="stylesheet" href="/styles.css">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "How to vet Cursor rules before using them",
+    "description": "A practical checklist for evaluating Cursor rules from awesome-cursorrules, GitHub, or anywhere else before you paste them into your project.",
+    "author": {
+      "@type": "Person",
+      "name": "nedcodes",
+      "url": "https://nedcodes.dev"
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "nedcodes",
+      "url": "https://nedcodes.dev"
+    },
+    "url": "https://nedcodes.dev/guides/vet-cursor-rules-before-using",
+    "datePublished": "2026-03-04",
+    "dateModified": "2026-03-04",
+    "keywords": ["cursor rules validation", "vet cursor rules", "check cursor rules", "awesome-cursorrules quality", "cursor rules lint"]
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "HowTo",
+    "name": "How to vet Cursor rules before using them",
+    "description": "A 5-point checklist to evaluate Cursor rules from GitHub, awesome-cursorrules, or any other source.",
+    "totalTime": "PT2M",
+    "step": [
+      {"@type": "HowToStep", "name": "Check for YAML frontmatter", "text": "Look for a block between --- markers with description and either alwaysApply or globs. Without frontmatter, Cursor doesn't know when to activate the rule."},
+      {"@type": "HowToStep", "name": "Check the length", "text": "If the rule is over 2000 characters (roughly 500+ tokens), it's probably too long. Split into focused rules."},
+      {"@type": "HowToStep", "name": "Check for mixed concerns", "text": "If one file covers naming, types, architecture, and styling, split it. One rule, one concern."},
+      {"@type": "HowToStep", "name": "Check the language", "text": "Scan for 'try to', 'consider', 'follow best practices'. Replace with specific imperative commands."},
+      {"@type": "HowToStep", "name": "Check for conflicts", "text": "Run npx cursor-doctor lint to check for contradictions with your existing rules."}
+    ]
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "How do I know if a Cursor rule set is good?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Check five things: (1) Does it have YAML frontmatter with description, alwaysApply, and globs? (2) Is the body under 2000 characters? (3) Does it cover one concern, not multiple? (4) Are instructions specific and imperative, not vague? (5) Does it conflict with your existing rules? You can check all five automatically with npx cursor-doctor lint."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What's wrong with rules from awesome-cursorrules?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "When I tested 4 popular rule sets from awesome-cursorrules, 100% were missing YAML frontmatter, 75% were too long and wasted tokens, 75% mixed multiple concerns in one file, and 50% used weak language like consider or try to. They're good starting points but need fixing before use."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How long should a Cursor rule be?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Under 2000 characters. Rules longer than 2000 chars burn 500+ tokens every time they load. If your rule is longer, split it into multiple focused rules with specific globs instead of one mega-rule with alwaysApply: true."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Should I use alwaysApply true or globs?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Use globs to scope rules to specific file types. Reserve alwaysApply: true for universal rules that apply to every file, like no console.log in production. Most rules should use globs to avoid wasting tokens on files where the rule doesn't apply."
+        }
+      }
+    ]
+  }
+  </script>
+  <style>
+    .article { padding: 100px 0 80px; max-width: 720px; margin: 0 auto; }
+    .article h1 { font-size: 32px; font-weight: 700; letter-spacing: -0.02em; margin-bottom: 16px; line-height: 1.2; }
+    .article .meta { color: var(--text-muted); font-size: 14px; margin-bottom: 40px; }
+    .article h2 { font-size: 22px; font-weight: 600; margin: 48px 0 16px; letter-spacing: -0.01em; }
+    .article h3 { font-size: 18px; font-weight: 600; margin: 32px 0 12px; }
+    .article p { color: var(--text-muted); font-size: 16px; line-height: 1.7; margin-bottom: 16px; }
+    .article strong { color: var(--text); }
+    .article code { background: var(--surface); border: 1px solid var(--border); padding: 2px 6px; border-radius: 4px; font-size: 14px; color: var(--green); }
+    .article pre { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; overflow-x: auto; margin: 16px 0; }
+    .article pre code { border: none; padding: 0; background: none; font-size: 14px; line-height: 1.6; color: var(--text); }
+    .article ul, .article ol { color: var(--text-muted); font-size: 16px; line-height: 1.7; margin: 0 0 16px 24px; }
+    .article li { margin-bottom: 8px; }
+    .article .callout { background: var(--surface); border-left: 3px solid var(--accent); padding: 16px 20px; border-radius: 0 var(--radius) var(--radius) 0; margin: 24px 0; }
+    .article .callout p { margin: 0; }
+    .checklist-box { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 24px; margin: 24px 0; }
+    .checklist-box h3 { margin-top: 0; font-size: 17px; }
+    .checklist-box .check-item { margin: 16px 0; padding-left: 28px; position: relative; }
+    .checklist-box .check-item::before { content: "✓"; position: absolute; left: 0; color: var(--accent); font-weight: 700; font-size: 18px; }
+    .example-bad { background: rgba(239, 68, 68, 0.05); border: 1px solid rgba(239, 68, 68, 0.2); border-radius: var(--radius); padding: 16px; margin: 16px 0; }
+    .example-good { background: rgba(34, 197, 94, 0.05); border: 1px solid rgba(34, 197, 94, 0.2); border-radius: var(--radius); padding: 16px; margin: 16px 0; }
+    .example-bad h4 { color: #ef4444; font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; margin: 0 0 8px; }
+    .example-good h4 { color: #22c55e; font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; margin: 0 0 8px; }
+    .example-bad pre, .example-good pre { margin: 0; background: transparent; border: none; padding: 0; }
+    .stats-inline { display: inline-flex; gap: 8px; flex-wrap: wrap; margin: 16px 0; }
+    .stat-pill { background: var(--surface); border: 1px solid var(--border); border-radius: 6px; padding: 8px 16px; font-size: 14px; white-space: nowrap; }
+    .stat-pill .num { color: var(--accent); font-weight: 700; }
+    .cta-box { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 24px; margin-top: 48px; }
+    .cta-box h3 { font-size: 18px; font-weight: 600; margin-bottom: 8px; }
+    .cta-box p { margin-bottom: 16px; }
+    .back-link { display: inline-block; color: var(--text-muted); font-size: 14px; margin-bottom: 24px; }
+    .back-link:hover { color: var(--text); }
+    .faq { margin-top: 48px; }
+    .faq h2 { margin-bottom: 24px; }
+    .faq-item { margin-bottom: 24px; }
+    .faq-item h3 { font-size: 17px; margin: 0 0 8px; }
+    .faq-item p { font-size: 15px; }
+  </style>
+</head>
+<body>
+  <nav class="nav">
+    <div class="nav-inner">
+      <a href="/" class="nav-logo">nedcodes</a>
+      <div class="nav-links">
+        <a href="/#tools">Tools</a>
+        <a href="/guides/">Guides</a>
+        <a href="/playground">Playground</a>
+        <a href="https://github.com/nedcodes-ok" target="_blank" rel="noopener">GitHub</a>
+      </div>
+    </div>
+  </nav>
+
+  <main class="article container">
+    <a href="/guides/" class="back-link">&larr; All guides</a>
+    <h1>how to vet Cursor rules before using them</h1>
+    <p class="meta">you found a rule set on GitHub. here's how to check if it's any good before pasting it into your project.</p>
+
+    <p>You're browsing <a href="https://github.com/PatrickJS/awesome-cursorrules" target="_blank" rel="noopener">awesome-cursorrules</a>, or someone shared a <code>.cursorrules</code> file in Discord, or you found a repo on GitHub with rules that look perfect for your stack.</p>
+
+    <p>Before you copy it into <code>.cursor/rules/</code>, check if it actually works. Most community rules have at least one critical issue. Some are completely broken.</p>
+
+    <p>I grabbed 4 popular rule sets from awesome-cursorrules and ran them through a linter. <strong>100% were missing frontmatter. 75% were too long. 50% used vague language that Cursor ignores.</strong> They're good starting points, but none of them work correctly out of the box.</p>
+
+    <p>Here's the checklist i use before adopting any rule set i find online.</p>
+
+    <h2>the 5-point vetting checklist</h2>
+
+    <div class="checklist-box">
+      <h3>Quick version</h3>
+      <div class="check-item">Does it have YAML frontmatter? (description, alwaysApply or globs)</div>
+      <div class="check-item">Is the body under 2000 characters?</div>
+      <div class="check-item">Does it cover one concern, not five?</div>
+      <div class="check-item">Are instructions specific and imperative?</div>
+      <div class="check-item">Does it conflict with your existing rules?</div>
+    </div>
+
+    <p>If any of these fail, the rule either won't work at all, will waste your context window, or will confuse Cursor into ignoring you. Let's go through each one.</p>
+
+    <h2>check 1: does it have YAML frontmatter?</h2>
+
+    <p><strong>What to look for:</strong> A block at the top of the file between <code>---</code> markers with at least <code>description</code> and either <code>alwaysApply</code> or <code>globs</code>.</p>
+
+    <p><strong>Why it matters:</strong> Without frontmatter, Cursor doesn't know when to activate the rule, which files it applies to, or how to prioritize it. The rule might load unpredictably or never load at all.</p>
+
+    <div class="example-bad">
+      <h4>❌ No frontmatter (won't work)</h4>
+      <pre><code>Next.js 15, React 19, TypeScript best practices.
+
+Code Style and Structure
+- Write concise TypeScript code with accurate examples.
+- Use functional and declarative programming patterns...</code></pre>
+    </div>
+
+    <div class="example-good">
+      <h4>✅ Has proper frontmatter</h4>
+      <pre><code>---
+description: Next.js + React + TypeScript best practices
+globs:
+  - "**/*.ts"
+  - "**/*.tsx"
+  - "app/**/*"
+alwaysApply: false
+---
+
+Code Style and Structure
+- Write concise TypeScript code with accurate examples.
+- Use functional and declarative programming patterns...</code></pre>
+    </div>
+
+    <p><strong>What to do:</strong> If there's no frontmatter, add it. If you want the rule to apply everywhere, use <code>alwaysApply: true</code>. If you want it scoped to specific files, use <code>globs</code> with patterns like <code>**/*.tsx</code>.</p>
+
+    <p><strong>Real data:</strong> All 4 rule sets i tested from awesome-cursorrules were missing frontmatter entirely. This was the #1 issue.</p>
+
+    <h2>check 2: is it under 2000 characters?</h2>
+
+    <p><strong>What to look for:</strong> Open the file in your editor. Check the character count or line count. If it's over 2000 characters (roughly 500+ tokens), it's probably too long.</p>
+
+    <p><strong>Why it matters:</strong> Every rule with <code>alwaysApply: true</code> gets loaded into Cursor's context window on every request. Long rules waste tokens that could be used for your actual code. One 4,000-character rule burns ~1,100 tokens every time it loads.</p>
+
+    <p><strong>What to do:</strong> Split long rules into focused ones. If a rule covers "naming conventions, error handling, and file structure," make three separate files: <code>naming.mdc</code>, <code>errors.mdc</code>, <code>structure.mdc</code>. Use <code>globs</code> to scope each one.</p>
+
+    <div class="stats-inline">
+      <div class="stat-pill"><span class="num">3 out of 4</span> rule sets i tested were over 2000 chars</div>
+      <div class="stat-pill">Longest was <span class="num">3,914 bytes</span> (~1,077 tokens)</div>
+    </div>
+
+    <p><strong>Pro tip:</strong> If a rule file has more than 50 lines, it's probably mixing concerns.</p>
+
+    <h2>check 3: does it mix concerns?</h2>
+
+    <p><strong>What to look for:</strong> Read through the instructions. Does it cover naming conventions, types, architecture, styling, and error handling all in one file? That's five different rules pretending to be one.</p>
+
+    <p><strong>Why it matters:</strong> When a rule tries to do everything, Cursor struggles to apply it correctly. One file covering "use camelCase for variables" and "implement error boundaries" and "structure components as feature folders" is confusing. Each instruction competes for attention.</p>
+
+    <p><strong>What to do:</strong> One rule, one concern. If you see multiple topics, split the file.</p>
+
+    <div class="example-bad">
+      <h4>❌ Mixing concerns</h4>
+      <pre><code>---
+description: React standards
+globs: ["src/**/*.tsx"]
+---
+
+Use PascalCase for components.
+Use camelCase for variables.
+Wrap route components in error boundaries.
+Keep components under 50 lines.
+Use CSS modules for styling.
+Store reusable logic in hooks/.</code></pre>
+    </div>
+
+    <div class="example-good">
+      <h4>✅ Focused on one concern</h4>
+      <pre><code>// naming.mdc
+---
+description: React component and variable naming
+globs: ["src/**/*.tsx"]
+---
+Use PascalCase for components.
+Use camelCase for variables and functions.
+
+// error-handling.mdc
+---
+description: Error boundaries for route components
+globs: ["src/app/**/*.tsx", "src/pages/**/*.tsx"]
+---
+Wrap every route-level component in an error boundary.
+Provide a fallback UI with a retry button.</code></pre>
+    </div>
+
+    <p><strong>Real data:</strong> 3 out of 4 rule sets i tested mixed multiple concerns in one file. This makes rules harder to scope with globs and burns tokens on instructions that don't apply to the current file.</p>
+
+    <h2>check 4: is the language specific?</h2>
+
+    <p><strong>What to look for:</strong> Scan for phrases like "try to," "consider," "you might want to," "follow best practices," "write clean code."</p>
+
+    <p><strong>Why it matters:</strong> AI models follow imperative commands better than suggestions. "Try to keep functions small" gives Cursor permission to ignore you. "Keep functions under 20 lines, extract helpers for longer logic" is a concrete instruction.</p>
+
+    <div class="example-bad">
+      <h4>❌ Vague language</h4>
+      <pre><code>Consider using functional components.
+Try to keep functions small.
+It's recommended to handle errors properly.
+Follow React best practices.</code></pre>
+    </div>
+
+    <div class="example-good">
+      <h4>✅ Specific language</h4>
+      <pre><code>Use functional components with hooks. No class components.
+Keep functions under 20 lines. Extract helpers for longer logic.
+Wrap all async route handlers in try-catch blocks.
+Prefix custom hooks with "use". Prefix utility functions with the module name.</code></pre>
+    </div>
+
+    <p><strong>What to do:</strong> Replace every "try to" with a direct command. Replace "follow best practices" with the actual practice. Replace "write clean code" with measurable rules like "max 20 lines per function."</p>
+
+    <p><strong>Real data:</strong> 2 out of 4 rule sets i tested used weak language like "consider" or "try to." These instructions don't change model behavior. They just waste tokens.</p>
+
+    <h2>check 5: does it conflict with your existing rules?</h2>
+
+    <p><strong>What to look for:</strong> If you already have rules in <code>.cursor/rules/</code>, check for contradictions. Does the new rule say "use semicolons" while your existing rule says "omit semicolons"? Does it say "use double quotes" while you enforce single quotes?</p>
+
+    <p><strong>Why it matters:</strong> When two rules contradict each other, Cursor picks one unpredictably. You won't get a warning. The AI will just follow whichever rule it loaded first or weighted higher.</p>
+
+    <p><strong>What to do:</strong> Before adding a new rule, run <code>npx cursor-doctor lint</code> to check for conflicts. If you find one, either delete the conflicting instruction from the new rule or remove the old rule entirely.</p>
+
+    <p><strong>Pro tip:</strong> This is the hardest check to do manually. Automated linting catches conflicts you'd never spot by reading.</p>
+
+    <h2>the automated way (10 seconds)</h2>
+
+    <p>You can check all five of these manually, or you can run one command:</p>
+
+    <pre><code>npx cursor-doctor lint</code></pre>
+
+    <p>It scans every <code>.mdc</code> file in your project and flags:</p>
+
+    <ul>
+      <li>Missing or malformed frontmatter</li>
+      <li>Rules over 2000 characters</li>
+      <li>Vague language patterns ("try to", "consider", "best practices")</li>
+      <li>Conflicting instructions between rules (48 semantic patterns)</li>
+      <li>Empty globs arrays</li>
+      <li>Windows-style backslashes in globs</li>
+      <li>YAML syntax errors and boolean strings</li>
+      <li>100+ other checks</li>
+    </ul>
+
+    <p>Before you paste a rule you found online, save it to <code>.cursor/rules/test-rule.mdc</code> and run the linter. Fix what it flags, then decide if it's worth keeping.</p>
+
+    <h2>real example: vetting a rule from awesome-cursorrules</h2>
+
+    <p>I grabbed the Next.js + React + TypeScript + Tailwind rule from awesome-cursorrules. Here's what cursor-doctor found:</p>
+
+    <pre><code>cursor-doctor v1.10.24 -- lint
+
+nextjs-react-tailwind.mdc  (3 warnings)
+  ⚠ Missing YAML frontmatter
+    → Add description, alwaysApply or globs so Cursor knows
+      when to load this rule.
+  ⚠ Rule body is very long (3,914 bytes)
+    → Shorter, specific rules outperform long generic ones.
+      Consider splitting into focused rules.
+  ⚠ Rule uses weak language: "try to/maybe/consider"
+    → AI models follow commands better than suggestions. Use
+      imperative mood: "Do X" instead of "try to do X".
+
+──────────────────────────────────────────────────
+3 warnings, 0 passed</code></pre>
+
+    <p>Three warnings from one file. And that's just what the linter catches automatically. Reading through the rule manually, i also noticed it mixes naming conventions, architecture patterns, and styling rules all in one file.</p>
+
+    <p>After fixing the frontmatter, splitting it into 3 focused rules, and replacing vague language with concrete commands, it passed with no warnings.</p>
+
+    <h2>when to skip a rule entirely</h2>
+
+    <p>Some rules aren't worth fixing. Skip the rule if:</p>
+
+    <ul>
+      <li>It's over 5,000 characters. That's 1,250+ tokens. Not worth it.</li>
+      <li>It starts with "You are an expert in..." These preambles waste 10-15 tokens and don't improve output.</li>
+      <li>It's mostly examples. One or two examples are fine. Eight examples are token waste.</li>
+      <li>It uses JavaScript/JSON syntax instead of markdown. Cursor reads markdown, not code.</li>
+      <li>It's a list of technologies with no actual instructions. "Next.js 15, React 19, TypeScript, Tailwind" tells Cursor nothing.</li>
+    </ul>
+
+    <p>If more than half the file is noise, don't bother. Write your own rule from scratch.</p>
+
+    <h2>rules worth using without modification</h2>
+
+    <p>A few patterns i've found that usually work out of the box:</p>
+
+    <ul>
+      <li>Rules under 1,000 characters with proper frontmatter</li>
+      <li>Rules scoped to a specific framework or library (e.g., "Svelte component conventions")</li>
+      <li>Rules that provide concrete examples for complex patterns (e.g., "How to structure tRPC routers")</li>
+      <li>Rules with clear, imperative language and no fluff</li>
+    </ul>
+
+    <p>These are rare. Most rules need at least some cleanup.</p>
+
+    <div class="faq">
+      <h2>frequently asked questions</h2>
+
+      <div class="faq-item">
+        <h3>how do i know if a Cursor rule set is good?</h3>
+        <p>Check five things: (1) Does it have YAML frontmatter with <code>description</code>, <code>alwaysApply</code>, and <code>globs</code>? (2) Is the body under 2000 characters? (3) Does it cover one concern, not multiple? (4) Are instructions specific and imperative, not vague? (5) Does it conflict with your existing rules? You can check all five automatically with <code>npx cursor-doctor lint</code>.</p>
+      </div>
+
+      <div class="faq-item">
+        <h3>what's wrong with rules from awesome-cursorrules?</h3>
+        <p>When i tested 4 popular rule sets from awesome-cursorrules, 100% were missing YAML frontmatter, 75% were too long and wasted tokens, 75% mixed multiple concerns in one file, and 50% used weak language like "consider" or "try to." They're good starting points but need fixing before use.</p>
+      </div>
+
+      <div class="faq-item">
+        <h3>how long should a Cursor rule be?</h3>
+        <p>Under 2000 characters. Rules longer than 2000 chars burn 500+ tokens every time they load. If your rule is longer, split it into multiple focused rules with specific globs instead of one mega-rule with <code>alwaysApply: true</code>.</p>
+      </div>
+
+      <div class="faq-item">
+        <h3>should i use alwaysApply true or globs?</h3>
+        <p>Use <code>globs</code> to scope rules to specific file types. Reserve <code>alwaysApply: true</code> for universal rules that apply to every file, like "no console.log in production." Most rules should use <code>globs</code> to avoid wasting tokens on files where the rule doesn't apply.</p>
+      </div>
+
+      <div class="faq-item">
+        <h3>can i trust rules from GitHub repos?</h3>
+        <p>Most public Cursor rules have at least one issue. I scanned 50 real GitHub projects and found that 60% had a health score of C or lower. Always run <code>cursor-doctor lint</code> on any rule you find before using it.</p>
+      </div>
+    </div>
+
+    <h2>related guides</h2>
+    <ul>
+      <li><a href="/guides/cursor-rule-mistakes">5 Cursor rule mistakes that make the AI ignore you</a></li>
+      <li><a href="/guides/write-cursor-rules-that-work">How to write Cursor rules that actually work</a></li>
+      <li><a href="/guides/cursor-rules-health-50-projects">I ran cursor-doctor on 50 real projects. Here's what broke.</a></li>
+      <li><a href="/guides/cursor-token-budget">Cursor token budget: how many rules is too many?</a></li>
+    </ul>
+
+    <div class="cta-box">
+      <h3>vet your rules in 10 seconds</h3>
+      <p>Before you use a rule you found online, check if it actually works.</p>
+      <pre style="margin-bottom:16px;"><code>npx cursor-doctor lint</code></pre>
+      <p style="margin-bottom:0;">Or paste a single rule into the <a href="/playground">playground</a> for instant feedback.</p>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-inner">
+        <span class="footer-brand">nedcodes</span>
+        <div class="footer-links">
+          <a href="mailto:hello@nedcodes.dev">hello@nedcodes.dev</a>
+          <a href="https://github.com/nedcodes-ok" target="_blank" rel="noopener">GitHub</a>
+          <a href="https://nedcodes.gumroad.com" target="_blank" rel="noopener">Store</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>
