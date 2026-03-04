@@ -11,14 +11,14 @@
     gtag('config', 'G-C5Q5XMK144');
   </script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Run cursor-doctor in CI with GitHub Actions — nedcodes</title>
-  <meta name="description" content="Lint your Cursor rules automatically in CI. Catch broken frontmatter, vague instructions, and invalid globs before they reach production.">
-  <meta property="og:title" content="Run cursor-doctor in CI with GitHub Actions">
-  <meta property="og:description" content="Lint Cursor rules in CI to catch broken frontmatter and invalid globs.">
+  <title>Add cursor-doctor to your CI pipeline in 2 minutes — nedcodes</title>
+  <meta name="description" content="Lint Cursor rules in CI with GitHub Actions, GitLab CI, or CircleCI. Catch broken frontmatter, rule conflicts, and vague instructions before they merge.">
+  <meta property="og:title" content="Add cursor-doctor to your CI pipeline in 2 minutes">
+  <meta property="og:description" content="Catch broken Cursor rules in CI before they merge. One line of YAML, zero config.">
   <meta property="og:image" content="https://nedcodes.dev/images/og-card.png">
   <meta property="og:url" content="https://nedcodes.dev/guides/cursor-doctor-ci-github-actions">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Run cursor-doctor in CI with GitHub Actions">
+  <meta name="twitter:title" content="Add cursor-doctor to your CI pipeline in 2 minutes">
   <meta name="theme-color" content="#0a0a0a">
   <link rel="canonical" href="https://nedcodes.dev/guides/cursor-doctor-ci-github-actions">
   <link rel="icon" href="/images/favicon.png" type="image/png">
@@ -26,9 +26,27 @@
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
-    "@type": "Article",
-    "headline": "Run cursor-doctor in CI with GitHub Actions",
-    "description": "Lint your Cursor rules automatically in CI. Catch broken frontmatter, vague instructions, and invalid globs before they reach production.",
+    "@type": "HowTo",
+    "name": "Add cursor-doctor to your CI pipeline in 2 minutes",
+    "description": "Lint Cursor rules in CI with GitHub Actions, GitLab CI, or CircleCI. Catch broken frontmatter, rule conflicts, and vague instructions before they merge.",
+    "step": [
+      {
+        "@type": "HowToStep",
+        "name": "Create workflow file",
+        "text": "Create .github/workflows/cursor-rules.yml in your repo"
+      },
+      {
+        "@type": "HowToStep",
+        "name": "Add cursor-doctor action",
+        "text": "Add the nedcodes-ok/cursor-doctor@v1 action to your workflow"
+      },
+      {
+        "@type": "HowToStep",
+        "name": "Push and verify",
+        "text": "Push the workflow file and verify the action runs on your next PR"
+      }
+    ],
+    "totalTime": "PT2M",
     "author": {
       "@type": "Person",
       "name": "nedcodes",
@@ -40,8 +58,8 @@
       "url": "https://nedcodes.dev"
     },
     "url": "https://nedcodes.dev/guides/cursor-doctor-ci-github-actions",
-    "datePublished": "2026-02-28",
-    "dateModified": "2026-02-28"
+    "datePublished": "2026-03-04",
+    "dateModified": "2026-03-04"
   }
   </script>
   <style>
@@ -49,6 +67,7 @@
     .article h1 { font-size: 32px; font-weight: 700; letter-spacing: -0.02em; margin-bottom: 16px; line-height: 1.2; }
     .article .meta { color: var(--text-muted); font-size: 14px; margin-bottom: 40px; }
     .article h2 { font-size: 22px; font-weight: 600; margin: 40px 0 16px; letter-spacing: -0.01em; }
+    .article h3 { font-size: 18px; font-weight: 600; margin: 32px 0 12px; }
     .article p { color: var(--text-muted); font-size: 16px; line-height: 1.7; margin-bottom: 16px; }
     .article strong { color: var(--text); }
     .article code { background: var(--surface); border: 1px solid var(--border); padding: 2px 6px; border-radius: 4px; font-size: 14px; color: var(--green); }
@@ -58,18 +77,16 @@
     .article li { margin-bottom: 8px; }
     .article .callout { background: var(--surface); border-left: 3px solid var(--accent); padding: 16px 20px; border-radius: 0 var(--radius) var(--radius) 0; margin: 24px 0; }
     .article .callout p { margin: 0; }
-    .article .good-bad { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 16px 0; }
-    .article .gb-col { background: var(--surface); border-radius: var(--radius); padding: 16px; }
-    .article .gb-col h4 { font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 8px; }
-    .article .gb-bad h4 { color: #ef4444; }
-    .article .gb-good h4 { color: #22c55e; }
+    .tldr { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 20px 24px; margin-bottom: 32px; }
+    .tldr h2 { margin: 0 0 12px; font-size: 16px; }
+    .tldr p { margin: 0 0 12px; font-size: 15px; }
+    .tldr pre { margin: 0; }
     .cta-box { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 24px; margin-top: 48px; }
     .cta-box h3 { font-size: 18px; font-weight: 600; margin-bottom: 8px; }
     .cta-box p { margin-bottom: 16px; }
     .back-link { display: inline-block; color: var(--text-muted); font-size: 14px; margin-bottom: 24px; }
     .back-link:hover { color: var(--text); }
     .tag-automate { background: rgba(6, 182, 212, 0.1); color: #06b6d4; padding: 4px 10px; border-radius: 4px; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; display: inline-block; margin-bottom: 16px; }
-    @media (max-width: 600px) { .article .good-bad { grid-template-columns: 1fr; } }
   </style>
 </head>
 <body>
@@ -86,33 +103,32 @@
   </nav>
 
   <main class="article container">
-    <a href="/guides/" class="back-link">← All guides</a>
+    <a href="/guides/" class="back-link">&larr; All guides</a>
     <span class="tag-automate">Automate</span>
-    <h1>Run cursor-doctor in CI with GitHub Actions</h1>
-    <p class="meta">Lint your Cursor rules automatically to catch broken frontmatter and invalid globs.</p>
+    <h1>Add cursor-doctor to your CI pipeline in 2 minutes</h1>
+    <p class="meta">March 4, 2026 &middot; Catch broken rules, conflicts, and syntax errors before they merge.</p>
 
-    <h2>Why lint rules in CI</h2>
-    <p>Rules with broken frontmatter or invalid globs fail silently. Cursor won't tell you the rule is broken, it just won't load. Running <code>cursor-doctor check</code> in CI catches these issues before they reach your team.</p>
+    <div class="tldr">
+      <h2>tl;dr</h2>
+      <p>Add this to <code>.github/workflows/cursor-rules.yml</code>:</p>
+      <pre><code>- uses: nedcodes-ok/cursor-doctor@v1</code></pre>
+      <p>Every PR now checks your Cursor rules for errors before merge.</p>
+    </div>
+
+    <h2>why lint Cursor rules in CI</h2>
+    <p>i built cursor-doctor after watching teams waste hours debugging rules that "stopped working." The problem is always the same: someone added a rule with broken YAML frontmatter, or two rules contradicted each other, or a glob pattern had a typo. Cursor doesn't warn you. The rule silently fails and your team wonders why the AI is ignoring instructions.</p>
+    <p>Linting in CI catches these before they reach your team:</p>
     <ul>
-      <li><strong>Catch frontmatter errors:</strong> Missing fields, invalid YAML, wrong data types</li>
-      <li><strong>Validate globs:</strong> Make sure glob patterns are syntactically correct</li>
-      <li><strong>Flag vague rules:</strong> Detect overly generic instructions that waste tokens</li>
-      <li><strong>Fail PRs early:</strong> Block merges that would break your rules setup</li>
+      <li><strong>Rules drift:</strong> A teammate adds a rule that says "use semicolons" when another rule already says "omit semicolons." Nobody notices until Cursor's behavior gets unpredictable.</li>
+      <li><strong>Broken frontmatter:</strong> YAML syntax errors make rules disappear. Cursor loads everything else and silently skips the broken one.</li>
+      <li><strong>Invalid globs:</strong> Glob patterns with typos or Windows backslashes match zero files. The rule exists but never activates.</li>
+      <li><strong>Vague instructions:</strong> New team members copy "follow best practices" into a rule. It burns tokens on every request but doesn't change model behavior.</li>
+      <li><strong>Token budget creep:</strong> Every <code>alwaysApply: true</code> rule adds to your context window usage. Without tracking, Cursor starts truncating your instructions.</li>
     </ul>
 
-    <h2>The check command</h2>
-    <p>The <code>check</code> command scans your <code>.cursor/rules/</code> directory and returns an exit code based on what it finds:</p>
-    <pre><code>npx cursor-doctor check</code></pre>
-    <p>Exit codes:</p>
-    <ul>
-      <li><strong>0:</strong> Setup is healthy (no issues found)</li>
-      <li><strong>1:</strong> Issues found (warnings or errors)</li>
-    </ul>
-    <p>Any issue causes the build to fail, which is what you want in CI. If something is wrong with your rules, you'll know before merging.</p>
-
-    <h2>GitHub Actions workflow</h2>
-    <p>Add this workflow to <code>.github/workflows/lint-cursor-rules.yml</code> to check rules on every push:</p>
-    <pre><code>name: Lint Cursor Rules
+    <h2>GitHub Actions setup</h2>
+    <p>Create <code>.github/workflows/cursor-rules.yml</code> in your repo:</p>
+    <pre><code>name: Cursor Rules Health Check
 
 on:
   push:
@@ -121,68 +137,203 @@ on:
     branches: [main]
 
 jobs:
-  lint-rules:
+  lint-cursor-rules:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      
-      - uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-      
-      - name: Check Cursor rules
-        run: npx cursor-doctor check</code></pre>
-    <p>This workflow runs on every push and PR to <code>main</code>. If <code>npx cursor-doctor check</code> exits with code 2, the workflow fails and blocks the merge.</p>
+      - uses: nedcodes-ok/cursor-doctor@v1</code></pre>
+    <p>This runs on every push to <code>main</code> and on every pull request. If cursor-doctor finds issues, the workflow fails and the PR can't merge.</p>
 
     <div class="callout">
-      <p><strong>Tip:</strong> Add <code>paths</code> to only run the workflow when rules files change. This saves CI minutes.</p>
+      <p><strong>Tip:</strong> The action handles Node.js setup automatically. No <code>setup-node</code> step needed.</p>
     </div>
 
-    <h2>Using lint for more detail</h2>
-    <p>The <code>check</code> command gives a pass/fail health grade. For a detailed breakdown of every issue in every file, use <code>lint</code> instead:</p>
-    <pre><code>- name: Lint Cursor rules
-  run: npx cursor-doctor lint</code></pre>
-    <p>The <code>lint</code> command exits with code 1 if any errors are found, 0 otherwise. It shows each issue with file path, severity, and a hint for fixing it.</p>
-
-    <h2>What the check command catches</h2>
-    <p>The linter validates frontmatter structure, glob syntax, and rule quality:</p>
-
-    <h3>Errors</h3>
+    <h3>action inputs</h3>
+    <p>Two optional inputs:</p>
+    <pre><code>- uses: nedcodes-ok/cursor-doctor@v1
+  with:
+    path: './my-project'       # Path to scan (default: '.')
+    fail-on-warning: 'true'    # Fail on warnings too (default: 'false')</code></pre>
     <ul>
-      <li>Missing or malformed YAML frontmatter</li>
-      <li>Rules that will never load (<code>alwaysApply: false</code> with no globs)</li>
-      <li>Empty rule bodies (frontmatter but no instructions)</li>
-      <li>Conflicting instructions within a rule</li>
+      <li><strong><code>path</code>:</strong> Where your <code>.cursor/</code> directory lives. Default is the repo root.</li>
+      <li><strong><code>fail-on-warning</code>:</strong> By default, only errors fail the build. Set to <code>true</code> to also fail on warnings.</li>
     </ul>
 
-    <h3>Warnings</h3>
+    <h3>only run when rules change</h3>
+    <p>Save CI minutes with a <code>paths</code> filter:</p>
+    <pre><code>on:
+  push:
+    branches: [main]
+    paths:
+      - '.cursor/rules/**'
+      - '.cursorrules'
+      - 'CLAUDE.md'
+      - 'AGENTS.md'
+  pull_request:
+    branches: [main]
+    paths:
+      - '.cursor/rules/**'
+      - '.cursorrules'
+      - 'CLAUDE.md'
+      - 'AGENTS.md'</code></pre>
+
+    <h2>what the output looks like</h2>
+    <p>Here's actual output from <code>cursor-doctor lint</code> on a project with a few issues:</p>
+    <pre><code>cursor-doctor v1.10.24 -- lint
+
+.cursor/rules/testing.mdc  (3 warnings)
+  ⚠ Vague rule detected: "follow best practices" (line 5)
+    → Replace with a specific instruction. Say exactly what
+      to do: what tool, what pattern, what format.
+  ⚠ Description is very short (&lt;10 chars)
+    → A descriptive description helps Cursor decide when to
+      apply this rule.
+  ⚠ Description is identical to filename
+    → Describe what the rule does, not just repeat the filename.
+
+.cursor/rules/types.mdc  (1 warning, 1 info)
+  ⚠ Rule uses weak language: "try to/maybe/consider"
+    → AI models follow commands better than suggestions. Use
+      imperative mood: "Do X" instead of "try to do X".
+  ℹ Multiple globs could be simplified: *.ts, *.tsx
+    → Consider using ["*.{ts,tsx}"] for cleaner syntax.
+
+──────────────────────────────────────────────────
+4 warnings, 1 info, 1 passed
+
+  ⚡ 4 issues can be auto-fixed.  Run: npx cursor-doctor fix</code></pre>
+    <p>The <code>check</code> command (used by default in CI) gives a pass/fail health grade:</p>
+    <pre><code>▒▒ Cursor Health: A ▒▒
+
+  ██████████████████████████████  96%
+
+  ✓ Rule syntax
+  ✓ No legacy .cursorrules
+  ✓ Token budget within limits
+  ✓ No semantic conflicts
+
+  4 passed  0 issues</code></pre>
+    <p>Grades D and F fail the build. A, B, and C pass.</p>
+
+    <h2>pre-commit hook</h2>
+    <p>CI is your safety net. Catch issues before you even push with a pre-commit hook.</p>
+    <p>Copy the included hook script:</p>
+    <pre><code>cp node_modules/cursor-doctor/scripts/pre-commit-hook.sh .git/hooks/pre-commit
+chmod +x .git/hooks/pre-commit</code></pre>
+    <p>Or create <code>.git/hooks/pre-commit</code> manually:</p>
+    <pre><code>#!/usr/bin/env bash
+# cursor-doctor pre-commit hook
+
+STAGED=$(git diff --cached --name-only --diff-filter=ACM \
+  | grep -E '\.mdc$|\.cursorrules$|CLAUDE\.md$|AGENTS\.md$')
+
+if [ -z "$STAGED" ]; then
+  exit 0
+fi
+
+echo "cursor-doctor: checking staged rule files..."
+npx cursor-doctor check
+exit $?</code></pre>
+    <p>The hook only runs when you stage rule files. If cursor-doctor finds issues, the commit is blocked.</p>
+
+    <div class="callout">
+      <p><strong>Note:</strong> Pre-commit hooks are local only. They don't transfer when someone clones your repo. Use CI as the enforced gate.</p>
+    </div>
+
+    <h2>what cursor-doctor catches in CI</h2>
+
+    <h3>frontmatter errors</h3>
     <ul>
-      <li>Missing or empty description</li>
-      <li>Vague instructions ("write clean code", "follow best practices")</li>
-      <li>No code examples in long rules</li>
-      <li>Overly broad or invalid glob patterns</li>
-      <li>Unknown frontmatter keys</li>
+      <li><strong>Missing YAML frontmatter:</strong> A <code>.mdc</code> file with no <code>---</code> block. Cursor ignores the entire file.</li>
+      <li><strong>YAML parse errors:</strong> Broken indentation, missing colons, unclosed quotes. The rule won't load.</li>
+      <li><strong>Boolean strings:</strong> <code>alwaysApply: "true"</code> instead of <code>alwaysApply: true</code>. YAML treats this as a string, not a boolean. The rule never activates.</li>
     </ul>
 
-    <h2>Running locally before committing</h2>
-    <p>Run the same check locally to catch issues before pushing:</p>
+    <h3>glob pattern mistakes</h3>
+    <ul>
+      <li><strong>Windows backslashes:</strong> <code>src\components\*.tsx</code> doesn't match anything. Globs use forward slashes.</li>
+      <li><strong>Typos in extensions:</strong> <code>*.typscript</code> instead of <code>*.ts</code>. The rule exists but never fires.</li>
+      <li><strong>Overly broad patterns:</strong> <code>*</code> or <code>**</code> matching everything when you meant <code>alwaysApply: true</code>.</li>
+    </ul>
+
+    <h3>semantic conflicts</h3>
+    <ul>
+      <li>"Use semicolons" vs "omit semicolons"</li>
+      <li>"Use default exports" vs "use named exports"</li>
+      <li>"Always use try/catch" vs "let errors bubble up"</li>
+    </ul>
+    <p>cursor-doctor checks 48 semantic conflict patterns across formatting, imports, error handling, state management, and more.</p>
+
+    <h3>vague instructions</h3>
+    <ul>
+      <li>"Write clean code"</li>
+      <li>"Follow best practices"</li>
+      <li>"Make it maintainable"</li>
+    </ul>
+    <p>These don't change model behavior. They just waste tokens. Replace them with specific instructions like "extract functions longer than 20 lines" or "add JSDoc comments to exported functions."</p>
+
+    <h2>other CI platforms</h2>
+    <p>The GitHub Action runs <code>npx cursor-doctor check</code> under the hood. Use the same command anywhere with Node.js:</p>
+
+    <h3>GitLab CI</h3>
+    <pre><code>lint-cursor-rules:
+  image: node:20
+  script:
+    - npx cursor-doctor check
+  only:
+    - merge_requests
+    - main</code></pre>
+
+    <h3>CircleCI</h3>
+    <pre><code>version: 2.1
+jobs:
+  lint-cursor-rules:
+    docker:
+      - image: cimg/node:20.0
+    steps:
+      - checkout
+      - run: npx cursor-doctor check
+workflows:
+  check-rules:
+    jobs:
+      - lint-cursor-rules</code></pre>
+
+    <h3>Jenkins</h3>
+    <pre><code>pipeline {
+  agent any
+  stages {
+    stage('Lint Cursor Rules') {
+      steps {
+        sh 'npx cursor-doctor check'
+      }
+    }
+  }
+}</code></pre>
+    <p>Exit code 0 means healthy. Exit code 1 means issues found. Same on every platform.</p>
+
+    <h2>testing locally</h2>
+    <p>Run the same check CI will run:</p>
     <pre><code>npx cursor-doctor check</code></pre>
-    <p>Fix any errors or warnings, then commit. Your CI workflow will pass on the first try.</p>
+    <p>For the detailed breakdown:</p>
+    <pre><code>npx cursor-doctor lint</code></pre>
+    <p>Fix the issues, push, and the CI check passes on the first try.</p>
 
-    <h2>Other CI platforms</h2>
-    <p>The <code>check</code> command works in any CI environment that supports Node.js. For GitLab CI, CircleCI, or Jenkins, install Node and run <code>npx cursor-doctor check</code> the same way. The exit code behavior is identical.</p>
+    <div class="callout">
+      <p><strong>Pro tip:</strong> <code>npx cursor-doctor fix --preview</code> shows what auto-fixes are available. Many issues (frontmatter syntax, boolean strings, glob corrections) can be fixed automatically. First fix is free, all fixes with <a href="https://nedcodes.gumroad.com/l/cursor-doctor-pro">Pro ($9)</a>.</p>
+    </div>
 
-    <h2>Related guides</h2>
+    <h2>related guides</h2>
     <ul>
-      <li><a href="/guides/write-cursor-rules-that-work">How to write Cursor rules that actually work</a></li>
+      <li><a href="/guides/lint-cursor-rules">How to lint your Cursor rules</a></li>
       <li><a href="/guides/fix-cursor-rule-conflicts">How to fix Cursor rule conflicts</a></li>
       <li><a href="/guides/cursor-rules-for-teams">Sharing Cursor rules across a team</a></li>
+      <li><a href="/guides/cursor-token-budget">Cursor token budget: how many rules is too many?</a></li>
     </ul>
 
     <div class="cta-box">
-      <h3>Add rule checking to CI</h3>
-      <p>Run <code>npx cursor-doctor check</code> in your CI pipeline to catch broken rules before they reach production.</p>
-      <pre style="margin-bottom:0;"><code>npx cursor-doctor check</code></pre>
+      <h3>Start linting Cursor rules in CI</h3>
+      <p>One line of YAML. Zero config. Broken rules never merge again.</p>
+      <pre style="margin-bottom:0;"><code>- uses: nedcodes-ok/cursor-doctor@v1</code></pre>
     </div>
   </main>
 
